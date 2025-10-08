@@ -4,7 +4,7 @@ public class FuncionSalir : MonoBehaviour
 {
     public void SalirDelJuego()
     {
-        Debug.Log("Salir del juego");
+        Debug.Log("Saliendo de RootBound....");
         Application.Quit();
     }
 
