@@ -1,11 +1,17 @@
 using UnityEngine;
 
+public enum CategoriaItemEnum
+{
+    Arma,
+    Pocion
+}
 public abstract class Item
 {
     private string nombre;
     private string descripcion;
     private GameObject modelo;
     private Sprite imagenInventario;
+    private CategoriaItemEnum categoriaItem;
 
     public string Nombre
     {
@@ -31,12 +37,19 @@ public abstract class Item
         set => imagenInventario = value;
     }
 
-    protected Item(string nombre, string descripcion, GameObject modelo, Sprite imagenInventario)
+    public CategoriaItemEnum CategoriaItem
+    {
+        get => categoriaItem;
+        set => categoriaItem = value;
+    }
+
+    protected Item(string nombre, string descripcion, GameObject modelo, Sprite imagenInventario, CategoriaItemEnum categoriaItem)
     {
         Nombre = nombre;
         Descripcion = descripcion;
         Modelo = modelo;
         ImagenInventario = imagenInventario;
+        CategoriaItem = categoriaItem;
     }
 
 }

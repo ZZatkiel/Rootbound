@@ -20,7 +20,7 @@ public class Arma : Item
     public float AtaqueCritico { get => ataqueCritico; set => ataqueCritico = value; }
     public RarezaArmas Rareza { get => rareza; set => rareza = value; }
 
-    public Arma(string nombre, string descripcion, GameObject modelo, Sprite imagenInventario, float daño, float velocidadDeAtaque, float ataqueCritico, RarezaArmas rareza) : base(nombre, descripcion, modelo, imagenInventario)
+    public Arma(string nombre, string descripcion, GameObject modelo, Sprite imagenInventario, CategoriaItemEnum categoriaItem,float daño, float velocidadDeAtaque, float ataqueCritico, RarezaArmas rareza) : base(nombre, descripcion, modelo, imagenInventario, categoriaItem)
     {
         Daño = daño;
         VelocidadDeAtaque = velocidadDeAtaque;

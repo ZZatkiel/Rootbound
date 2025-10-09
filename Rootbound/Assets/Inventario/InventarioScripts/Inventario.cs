@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.XR;
 using UnityEngine;
 
 public class Inventario : MonoBehaviour
@@ -43,7 +44,7 @@ public class Inventario : MonoBehaviour
 
         for (int i = 0; i < allSlotsPociones; i++)
         {
-            PocionesInventarioUI[i] = armasHandler.transform.GetChild(i).gameObject;
+            PocionesInventarioUI[i] = pocionHandler.transform.GetChild(i).gameObject;
         }
 
 
@@ -56,6 +57,12 @@ public class Inventario : MonoBehaviour
         ItemsTotales.Add("Armas", armas);
 
 
+        Arma armita = new Arma("Arma furiosa", "Esto es un arma", null, null, CategoriaItemEnum.Arma, 100, 100, 100, RarezaArmas.Comun);
+        AgregarArma(armita);
+
+        //Pocion pocionMagica = new Pocion("Pocion de Mana", "Pocion Magica que recupera el mana", null, null, CategoriaItemEnum.Pocion , 30, 2);
+        //AgregarPocion(pocionMagica);
+
     }
 
     private void Update()
@@ -64,9 +71,58 @@ public class Inventario : MonoBehaviour
     }
 
 
+    public bool AgregarPocion(Pocion pocionParaAgregar)
+    {
+        Item[] pocionesTotales = ItemsTotales["Pociones"];
 
+        for (int i = 0; i < pocionesTotales.Length; i++)
+        {
+            if (pocionesTotales[i] == null)
+            {
+                pocionesTotales[i] = pocionParaAgregar;
+                UpdatePocionInventarioUI();
+                return true;
+            }
+            else
+            {
+                if (pocionesTotales[i].Nombre == pocionParaAgregar.Nombre)
+                {
+                    Pocion pocionDeLaLista = (Pocion)pocionesTotales[i];
+                    pocionDeLaLista.Cantidad += pocionParaAgregar.Cantidad;
+                    UpdatePocionInventarioUI();
+                    return true;
+                }
 
+            }
 
+        }
+        return false;
+    }
+
+    public bool EliminarPocion(Pocion pocionParaEliminar)
+    {
+        Item[] pocionesTotales = ItemsTotales["Pociones"];
+
+        for (int i = 0; i < pocionesTotales.Length; i++)
+        {
+            if (pocionesTotales[i] != null)
+            {
+                if (pocionesTotales[i].Nombre == pocionParaEliminar.Nombre)
+                {
+                    Pocion pocionDeLaLista = (Pocion)pocionesTotales[i];
+                    pocionDeLaLista.Cantidad -= pocionParaEliminar.Cantidad;
+                    UpdatePocionInventarioUI();
+                    if (pocionDeLaLista.Cantidad == 0)
+                    {
+                        pocionesTotales[i] = null;
+                        UpdatePocionInventarioUI();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 
     // Funciones para Agregar y Eliminar Armas 
@@ -92,7 +148,7 @@ public class Inventario : MonoBehaviour
     {
         Item[] armasTotales = ItemsTotales["Armas"];
 
-        for (int i = armasTotales.Length - 1; 0 < i; i--)
+        for (int i = armasTotales.Length - 1; i >= 0; i--)
         {
             if (armasTotales[i] != null)
             {
@@ -121,6 +177,17 @@ public class Inventario : MonoBehaviour
             ArmasInventarioUI[i].GetComponent<Slot>().SetItem(armasTotales[i]);
         }
 
+    }
+
+
+    public void UpdatePocionInventarioUI()
+    {
+        Item[] pocionesTotales = ItemsTotales["Pociones"];
+
+        for (int i = 0; i < PocionesInventarioUI.Length; i++)
+        {
+            PocionesInventarioUI[i].GetComponent<Slot>().SetItem(pocionesTotales[i]);
+        }
     }
 
 

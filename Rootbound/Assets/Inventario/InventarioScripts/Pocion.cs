@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Pocion : Item
@@ -13,11 +14,28 @@ public class Pocion : Item
 
     public int Cantidad
     {
-        get => cantidad;
-        set => cantidad = value;
+        get
+        {
+            return cantidad;
+        }
+        set
+        {
+            if (value < 0)
+            {
+                cantidad = 0;
+            }
+            else if (value > 50)
+            {
+                cantidad = 50;    
+            }
+            else
+            {
+                cantidad = value;
+            }
+        }
     }
 
-    public Pocion(string nombre, string descripcion, GameObject modelo, Sprite imagenInventario, int duracion, int cantidad) : base(nombre, descripcion, modelo, imagenInventario)
+    public Pocion(string nombre, string descripcion, GameObject modelo, Sprite imagenInventario, CategoriaItemEnum categoriaItem, int duracion, int cantidad) : base(nombre, descripcion, modelo, imagenInventario, categoriaItem)
     {
         Duracion = duracion;
         Cantidad = cantidad;
