@@ -1,16 +1,25 @@
 using UnityEngine;
 
-public class Pocion : MonoBehaviour
+public class Pocion : Item
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private int duracion;
+    private int cantidad;
+
+    public int Duracion
     {
-        
+        get => duracion;
+        set => duracion = value;
     }
 
-    // Update is called once per frame
-    void Update()
+    public int Cantidad
     {
-        
+        get => cantidad;
+        set => cantidad = value;
+    }
+
+    public Pocion(string nombre, string descripcion, GameObject modelo, Sprite imagenInventario, int duracion, int cantidad) : base(nombre, descripcion, modelo, imagenInventario)
+    {
+        Duracion = duracion;
+        Cantidad = cantidad;
     }
 }
