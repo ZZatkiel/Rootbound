@@ -13,6 +13,9 @@ public class Inventario : MonoBehaviour
     int allSlotsPociones;
     public GameObject pocionHandler;
     public GameObject armasHandler;
+    public GameObject invPociones;
+    public GameObject invArmas;
+
 
 
     // Array Externo o visual donde se ve todo
@@ -39,12 +42,16 @@ public class Inventario : MonoBehaviour
         for (int i = 0; i < allSlotsArmas; i++)
         {
             ArmasInventarioUI[i] = armasHandler.transform.GetChild(i).gameObject;
+            ArmasInventarioUI[i].GetComponent<Slot>().InicializarSlot();
         }
 
 
         for (int i = 0; i < allSlotsPociones; i++)
         {
             PocionesInventarioUI[i] = pocionHandler.transform.GetChild(i).gameObject;
+            PocionesInventarioUI[i].GetComponent<Slot>().InicializarSlot();
+
+
         }
 
 
@@ -56,12 +63,8 @@ public class Inventario : MonoBehaviour
         ItemsTotales.Add("Pociones", pociones);
         ItemsTotales.Add("Armas", armas);
 
-
-        Arma armita = new Arma("Arma furiosa", "Esto es un arma", null, null, CategoriaItemEnum.Arma, 100, 100, 100, RarezaArmas.Comun);
-        AgregarArma(armita);
-
-        //Pocion pocionMagica = new Pocion("Pocion de Mana", "Pocion Magica que recupera el mana", null, null, CategoriaItemEnum.Pocion , 30, 2);
-        //AgregarPocion(pocionMagica);
+        UpdateArmaInventarioUI();
+        UpdatePocionInventarioUI();
 
     }
 
@@ -250,6 +253,20 @@ public class Inventario : MonoBehaviour
         {
             inventario.SetActive(false);
         }
+    }
+
+    public void MostrarArmas()
+    {
+        invArmas.SetActive(true);
+        invPociones.SetActive(false);
+        UpdateArmaInventarioUI();
+    }
+
+    public void MostrarPociones()
+    {
+        invPociones.SetActive(true);
+        invArmas.SetActive(false);
+        UpdatePocionInventarioUI();
     }
 
 }
