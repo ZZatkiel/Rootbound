@@ -5,15 +5,12 @@ using UnityEngine.UI;
 public class Tienda : MonoBehaviour
 {
     public List<Dictionary<string, object>> armas;
-    List<Dictionary<string, object>> seleccion;
-    List<Dictionary<string, object>> copiaArmas;
 
-    public GameObject objetoComprable1; 
-    public GameObject objetoComprable2; 
+    public GameObject objetoComprable1;
+    public GameObject objetoComprable2;
     public GameObject objetoComprable3;
 
     GameObject[] listObjetosComprables;
-
 
     private void Awake()
     {
@@ -239,10 +236,28 @@ public class Tienda : MonoBehaviour
 
         for (int i = 0; i < armasSeleccionadas.Count; i++)
         {
-            listObjetosComprables[i].transform.Find("NombreDelObjeto").GetComponent<Text>().text = armasSeleccionadas[i]["nombre"].ToString();
-            listObjetosComprables[i].transform.Find("DescripcionDelObjeto").GetComponent<Text>().text = armasSeleccionadas[i]["descripcion"].ToString();
-            listObjetosComprables[i].transform.Find("PrecioDelObjeto").GetComponent<Text>().text = armasSeleccionadas[i]["precio"].ToString();
+            Dictionary<string, object> item = armasSeleccionadas[i];
+
+            listObjetosComprables[i].transform.Find("NombreDelObjeto").GetComponent<Text>().text = item["nombre"].ToString();
+            listObjetosComprables[i].transform.Find("DescripcionDelObjeto").GetComponent<Text>().text = item["descripcion"].ToString();
+            listObjetosComprables[i].transform.Find("PrecioDelObjeto").GetComponent<Text>().text = item["precio"].ToString();
+
+            Button botonCompra = listObjetosComprables[i].transform.Find("BotonTienda").GetComponent<Button>();
+
+            botonCompra.onClick.RemoveAllListeners();
+            botonCompra.onClick.AddListener(() => Comprar(item));
         }
+    }
+
+    public void Comprar(Dictionary<string, object> item)
+    {
+        Debug.Log($"Comprado {item["nombre"].ToString()}");
+        // si no tenes las monedas suficientes, no podes comprarlo y se pone en rojo durante 5s el boton
+        // si tenes las monedas suficientes el objeto se desactiva y pasa al Inventario
+
+        // osea hay que crear ya el gameManager con el audioManager y el ScoreManager
+        // el ScoreManager tiene las monedas del jugador
+        
     }
 
 
