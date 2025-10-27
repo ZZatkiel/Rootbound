@@ -245,6 +245,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7116314708630045766, guid: e348e7143b6247b488737e4be26fb038, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9100508158649072905, guid: e348e7143b6247b488737e4be26fb038, type: 3}
       propertyPath: m_Name
       value: Floor
@@ -23980,6 +23984,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5239272197777735519, guid: e348e7143b6247b488737e4be26fb038, type: 3}
   m_PrefabInstance: {fileID: 749143962}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &750611767
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 750611769}
+  - component: {fileID: 750611768}
+  m_Layer: 0
+  m_Name: GameManagerr
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &750611768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750611767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2235746e39ae9ac40898dbb30834de1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &750611769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750611767}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &750971401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58938,6 +58986,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1799192609}
+  - component: {fileID: 1799192610}
   m_Layer: 0
   m_Name: Piso
   m_TagString: Untagged
@@ -58996,6 +59045,27 @@ Transform:
   - {fileID: 1201714423}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1799192610
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1799192608}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 59, y: 0, z: 58.62}
+  m_Center: {x: 6.96, y: 0, z: -7.28}
 --- !u!1001 &1799809255
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62336,6 +62406,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 729362954}
     m_Modifications:
+    - target: {fileID: -3212457486517514475, guid: fbcbd952f0d36f342b376509f21127ff, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 178811535428721102, guid: fbcbd952f0d36f342b376509f21127ff, type: 3}
       propertyPath: m_Name
       value: Pilar (2)
@@ -69075,3 +69149,4 @@ SceneRoots:
   - {fileID: 1856242050}
   - {fileID: 1536932436}
   - {fileID: 1934531840}
+  - {fileID: 750611769}
