@@ -6,6 +6,7 @@ public class Tienda : MonoBehaviour
 {
     public List<Dictionary<string, object>> armas;
 
+    public GameObject panelTienda;
     public GameObject objetoComprable1;
     public GameObject objetoComprable2;
     public GameObject objetoComprable3;
@@ -231,6 +232,7 @@ public class Tienda : MonoBehaviour
     }
     public void MostrarArmasEnUI()
     {
+        panelTienda.SetActive(true);
         List<Dictionary<string, object>> armasSeleccionadas = obtenerTresArmasRandom();
         listObjetosComprables = new GameObject[3] { objetoComprable1, objetoComprable2, objetoComprable3 };
 
@@ -261,10 +263,6 @@ public class Tienda : MonoBehaviour
     }
 
 
-    private void Start()
-    {
-        MostrarArmasEnUI();
-    }
 }
 
 
