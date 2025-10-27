@@ -21,12 +21,12 @@ public class ScoreManager
         return Puntos;
     }
 
-    public void modificarPuntos(int x)
+    public void ResetearPuntos(int x)
     {
         Puntos = x;
     }
 
-    public void AgregarPuntos(int x)
+    public void modificarPuntos(int x)
     {
         puntos += x;
         if (puntos < 0) puntos = 0;

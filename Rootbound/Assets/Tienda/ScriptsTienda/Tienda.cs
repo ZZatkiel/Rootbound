@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,8 @@ public class Tienda : MonoBehaviour
     public GameObject objetoComprable1;
     public GameObject objetoComprable2;
     public GameObject objetoComprable3;
+    public Text TextoDeRecarga;
+    public int valorDeRecarga = 10;
 
     GameObject[] listObjetosComprables;
 
@@ -213,6 +216,8 @@ public class Tienda : MonoBehaviour
                 {"rareza", 4}
             }
         };
+
+        TextoDeRecarga.text = valorDeRecarga.ToString();
     }
 
 
@@ -223,7 +228,7 @@ public class Tienda : MonoBehaviour
         
         for (int i = 0; i < 3 && copiaArmas.Count > 0; i++)
         {
-            int index = Random.Range(0, copiaArmas.Count);
+            int index = UnityEngine.Random.Range(0, copiaArmas.Count);
             seleccion.Add(copiaArmas[index]);
             copiaArmas.RemoveAt(index);
         }
@@ -239,6 +244,8 @@ public class Tienda : MonoBehaviour
         for (int i = 0; i < armasSeleccionadas.Count; i++)
         {
             Dictionary<string, object> item = armasSeleccionadas[i];
+            GameObject contenedorDeDatosComprables = listObjetosComprables[i];
+            contenedorDeDatosComprables.SetActive(true);
 
             listObjetosComprables[i].transform.Find("NombreDelObjeto").GetComponent<Text>().text = item["nombre"].ToString();
             listObjetosComprables[i].transform.Find("DescripcionDelObjeto").GetComponent<Text>().text = item["descripcion"].ToString();
@@ -247,21 +254,40 @@ public class Tienda : MonoBehaviour
             Button botonCompra = listObjetosComprables[i].transform.Find("BotonTienda").GetComponent<Button>();
 
             botonCompra.onClick.RemoveAllListeners();
-            botonCompra.onClick.AddListener(() => Comprar(item));
+            botonCompra.onClick.AddListener(() => Comprar(item, contenedorDeDatosComprables));
         }
     }
 
-    public void Comprar(Dictionary<string, object> item)
-    {
-        Debug.Log($"Comprado {item["nombre"].ToString()}");
-        // si no tenes las monedas suficientes, no podes comprarlo y se pone en rojo durante 5s el boton
-        // si tenes las monedas suficientes el objeto se desactiva y pasa al Inventario
-
-        // osea hay que crear ya el gameManager con el audioManager y el ScoreManager
-        // el ScoreManager tiene las monedas del jugador
-        
+    public void Recargar()
+    { 
+        if (GameManagerSC.Instancia.scoreManager.obtenerPuntos() >= valorDeRecarga)
+        {
+            MostrarArmasEnUI();
+            valorDeRecarga *= 2;
+            GameManagerSC.Instancia.scoreManager.modificarPuntos(-valorDeRecarga);
+            Debug.Log($"Puntos restantes {GameManagerSC.Instancia.scoreManager.obtenerPuntos()}");
+            TextoDeRecarga.text = valorDeRecarga.ToString();
+        }
     }
 
+    public void Comprar(Dictionary<string, object> item, GameObject contenedorDeDatosComprables)
+    {
+        int precio = Convert.ToInt32(item["precio"]);
+
+        if (GameManagerSC.Instancia.scoreManager.obtenerPuntos() >= precio)
+        {
+            Debug.Log($"Comprado {item["nombre"].ToString()}");
+            GameManagerSC.Instancia.scoreManager.modificarPuntos(-precio);
+            Debug.Log($"Puntos restantes {GameManagerSC.Instancia.scoreManager.obtenerPuntos()}");
+            contenedorDeDatosComprables.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("No tenes suficientes monedas");
+        }
+
+        
+    }
 
 }
 
