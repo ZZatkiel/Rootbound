@@ -14525,7 +14525,6 @@ GameObject:
   - component: {fileID: 430844172}
   - component: {fileID: 430844171}
   - component: {fileID: 430844170}
-  - component: {fileID: 430844174}
   m_Layer: 5
   m_Name: TIendaObjetos
   m_TagString: Untagged
@@ -14618,21 +14617,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &430844174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 430844169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca65ce9343aa51140abeebde43e75665, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objetoComprable1: {fileID: 1914041100}
-  objetoComprable2: {fileID: 769993042}
-  objetoComprable3: {fileID: 865365522}
 --- !u!1001 &433639685
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15144,7 +15128,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 430844174}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Tienda, Assembly-CSharp
         m_MethodName: MostrarArmasEnUI
         m_Mode: 1
