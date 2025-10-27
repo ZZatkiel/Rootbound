@@ -12,9 +12,21 @@ public class Tienda : MonoBehaviour
     public GameObject objetoComprable2;
     public GameObject objetoComprable3;
     public Text TextoDeRecarga;
-    public int valorDeRecarga = 10;
+    public int valorDeRecarga;
 
     GameObject[] listObjetosComprables;
+
+    private void OnEnable()
+    {
+        TextoDeRecarga.text = valorDeRecarga.ToString();
+    }
+
+
+    private void OnDisable()
+    {
+        valorDeRecarga = 10;
+
+    }
 
     private void Awake()
     {
@@ -217,7 +229,6 @@ public class Tienda : MonoBehaviour
             }
         };
 
-        TextoDeRecarga.text = valorDeRecarga.ToString();
     }
 
 

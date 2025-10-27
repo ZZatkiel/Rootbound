@@ -3337,6 +3337,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5239272197777735519, guid: e348e7143b6247b488737e4be26fb038, type: 3}
   m_PrefabInstance: {fileID: 93260885}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &96509699 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 685276009343013526, guid: 487ca33bf7608ce478c7c9f46c089aec, type: 3}
+  m_PrefabInstance: {fileID: 1427389584}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &99237031
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17021,6 +17026,8 @@ MonoBehaviour:
   objetoComprable1: {fileID: 1612458296}
   objetoComprable2: {fileID: 222347388}
   objetoComprable3: {fileID: 855260600}
+  TextoDeRecarga: {fileID: 1617099910}
+  valorDeRecarga: 10
 --- !u!65 &526497170
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45267,6 +45274,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 43344982346543837, guid: 487ca33bf7608ce478c7c9f46c089aec, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 526497169}
+    - target: {fileID: 43344982346543837, guid: 487ca33bf7608ce478c7c9f46c089aec, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Recargar
+      objectReference: {fileID: 0}
     - target: {fileID: 1248485998765570146, guid: 487ca33bf7608ce478c7c9f46c089aec, type: 3}
       propertyPath: m_Name
       value: TIendaObjetos
@@ -45429,7 +45444,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 685276009343013526, guid: 487ca33bf7608ce478c7c9f46c089aec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1617099909}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 487ca33bf7608ce478c7c9f46c089aec, type: 3}
 --- !u!1001 &1430814803
@@ -51945,6 +51963,85 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5239272197777735519, guid: e348e7143b6247b488737e4be26fb038, type: 3}
   m_PrefabInstance: {fileID: 1617069304}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1617099908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1617099909}
+  - component: {fileID: 1617099911}
+  - component: {fileID: 1617099910}
+  m_Layer: 5
+  m_Name: TextoRecarga
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1617099909
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617099908}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 96509699}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -55.730988, y: 0}
+  m_SizeDelta: {x: 40.8619, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1617099910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617099908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 32
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 0
+--- !u!222 &1617099911
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617099908}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1618633874
 PrefabInstance:
   m_ObjectHideFlags: 0
