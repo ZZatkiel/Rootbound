@@ -3,7 +3,8 @@ using UnityEngine;
 public enum CategoriaItemEnum
 {
     Arma,
-    Pocion
+    Pocion,
+    Indefinido
 }
 public abstract class Item
 {

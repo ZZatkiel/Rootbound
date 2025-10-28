@@ -1,14 +1,18 @@
+using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using System.Collections.Generic;
 using UnityEditor.XR;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Inventario : MonoBehaviour
 {
+    public static Inventario Instancia { get; private set; } // Singleton
+
+
     // Array Interno donde estan todos los items
     Dictionary<string, Item[]> ItemsTotales = new Dictionary<string, Item[]>();
 
     //Elementos del array Externo
-
     int allSlotsArmas;
     int allSlotsPociones;
     public GameObject pocionHandler;
@@ -19,15 +23,26 @@ public class Inventario : MonoBehaviour
 
 
     // Array Externo o visual donde se ve todo
-
     GameObject[] PocionesInventarioUI;
     GameObject[] ArmasInventarioUI;
-
 
 
     // Parte UI
     bool inventoryEnabled;
     public GameObject inventario;
+
+
+    private void Awake()
+    {
+         if (Instancia != null && Instancia != this)
+        {
+            Destroy(gameObject);
+            return;
+        }   
+
+         Instancia = this;
+    }
+
 
     private void Start()
     {
@@ -43,6 +58,9 @@ public class Inventario : MonoBehaviour
         {
             ArmasInventarioUI[i] = armasHandler.transform.GetChild(i).gameObject;
             ArmasInventarioUI[i].GetComponent<Slot>().InicializarSlot();
+            ArmasInventarioUI[i].GetComponent<Slot>().EstablecerIndiceYCategoria(i, CategoriaItemEnum.Arma);
+            if (ArmasInventarioUI[i].GetComponent<DragHandler>() == null)
+                ArmasInventarioUI[i].AddComponent<DragHandler>();
         }
 
 
@@ -50,7 +68,9 @@ public class Inventario : MonoBehaviour
         {
             PocionesInventarioUI[i] = pocionHandler.transform.GetChild(i).gameObject;
             PocionesInventarioUI[i].GetComponent<Slot>().InicializarSlot();
-
+            PocionesInventarioUI[i].GetComponent<Slot>().EstablecerIndiceYCategoria(i, CategoriaItemEnum.Pocion);
+            if (PocionesInventarioUI[i].GetComponent<DragHandler>() == null)
+                PocionesInventarioUI[i].AddComponent<DragHandler>();
 
         }
 
@@ -65,6 +85,22 @@ public class Inventario : MonoBehaviour
 
         UpdateArmaInventarioUI();
         UpdatePocionInventarioUI();
+
+        
+        Sprite armaMadera = Resources.Load<Sprite>("SpritesArmas/EspadaMaderaIcono");
+        Arma armita = new Arma("Espadota", "Esta es una espada que hace mucho daño", null, armaMadera, CategoriaItemEnum.Arma, 100, 200, 12, RarezaArmas.Epico);
+        AgregarArma(armita);
+
+        Arma otraarma = new Arma("ESPADON", "Esta es una espada que hace mucho daño", null, null, CategoriaItemEnum.Arma, 100, 200, 12, RarezaArmas.Epico);
+        AgregarArma(otraarma);
+
+        Pocion pocionVida = new Pocion("Pocion de vida", "Esta es una pocion que cura", null, null, CategoriaItemEnum.Pocion, 100, 5);
+
+        Pocion pocionDaño = new Pocion("Pocion de daño", "Esta es una pocion que te da fuerza", null, null, CategoriaItemEnum.Pocion, 100, 10);
+
+        AgregarPocion(pocionVida);
+        AgregarPocion(pocionDaño);
+
 
     }
 
@@ -167,6 +203,65 @@ public class Inventario : MonoBehaviour
         Debug.Log("No hay para eliminar");
         return false;
     }
+
+
+    // MOVER / INTERCAMBIO ITEMS (lo usa el dragHandler)
+
+    public void Swap(CategoriaItemEnum primeraCategoria, int primerIndice, CategoriaItemEnum segundaCategoria, int segundoIndice)
+    {
+        if (primeraCategoria != segundaCategoria)
+        {
+            Debug.Log("Son dos categorias diferentes, no se puede mover de un inventario a otro");
+            return;
+        }
+
+        string llave = primeraCategoria == CategoriaItemEnum.Arma ? "Armas" : "Pociones";
+
+
+
+        Debug.Log(llave);
+        Debug.Log(primerIndice);
+
+
+
+        if (primerIndice < 0 || primerIndice >= ItemsTotales[llave].Length || segundoIndice < 0 || segundoIndice >= ItemsTotales[llave].Length)
+        {
+            Debug.Log("El indice es invalido para moverlo");
+            return;
+        } 
+
+        if (ItemsTotales[llave][primerIndice] == null)
+        {
+
+            Debug.Log(ItemsTotales[llave][primerIndice]);
+            return;
+        }
+
+        if (ItemsTotales[llave][segundoIndice] == null)
+        {
+            Debug.Log("Necesitas tener un objeto para poder intercambiar");
+            return;
+        }
+
+        if (ItemsTotales[llave][primerIndice] != null && ItemsTotales[llave][segundoIndice] != null)
+        {
+            // SWAP
+
+            Item temp = ItemsTotales[llave][segundoIndice];
+            ItemsTotales[llave][segundoIndice] = ItemsTotales[llave][primerIndice];
+            ItemsTotales[llave][primerIndice] = temp;
+
+        }
+
+        if (llave == "Pociones") UpdatePocionInventarioUI();
+        else UpdateArmaInventarioUI();
+
+    }
+
+
+
+
+
 
 
     // Actualizar Interfaz Externa

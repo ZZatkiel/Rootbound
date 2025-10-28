@@ -9,7 +9,10 @@ public class Slot : MonoBehaviour
     Image iconoDelSlot; // Imagen donde se guarda el item
     Sprite IconoPorDefecto; //Si no tiene icono el item
     Text contadorPocion;
+    Sprite imageSlot;
 
+    int indice = -1;
+    CategoriaItemEnum categoria = CategoriaItemEnum.Indefinido;
     public void InicializarSlot()
     {
         iconoDelSlot = GetComponent<Image>();
@@ -36,6 +39,13 @@ public class Slot : MonoBehaviour
 
     }
 
+    public void EstablecerIndiceYCategoria(int indiceDelSlot, CategoriaItemEnum categoriaDelSlot)
+    {
+        indice = indiceDelSlot;
+        categoria = categoriaDelSlot;
+
+    }
+
     public void SetItem(Item newItem)
     {
         item = newItem;
@@ -45,7 +55,9 @@ public class Slot : MonoBehaviour
             return;
         }
 
-        iconoDelSlot.sprite = item.ImagenInventario ?? IconoPorDefecto;
+        imageSlot = item.ImagenInventario ?? IconoPorDefecto;
+
+        iconoDelSlot.sprite = imageSlot;
         GetComponent<Image>().enabled = true;
 
         if (newItem.CategoriaItem == CategoriaItemEnum.Pocion)
@@ -74,5 +86,9 @@ public class Slot : MonoBehaviour
             contadorPocion.text = "";
     }
 
+    public int GetIndex() => indice;
+    public CategoriaItemEnum GetCategoria() => categoria;
     public Item GetItem() => item;
+
+    public Sprite GetImageSlot() => imageSlot;
 }
