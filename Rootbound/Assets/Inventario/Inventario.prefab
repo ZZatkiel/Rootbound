@@ -2440,7 +2440,7 @@ GameObject:
   - component: {fileID: 5202530660442208437}
   - component: {fileID: 5876081802627327410}
   m_Layer: 5
-  m_Name: ArmasInv
+  m_Name: ArmasInvSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -8,6 +8,7 @@ public class Inventario : MonoBehaviour
 {
     public static Inventario Instancia { get; private set; } // Singleton
 
+    public GameObject tiendaObjetos;
 
     // Array Interno donde estan todos los items
     Dictionary<string, Item[]> ItemsTotales = new Dictionary<string, Item[]>();
@@ -17,8 +18,8 @@ public class Inventario : MonoBehaviour
     int allSlotsPociones;
     public GameObject pocionHandler;
     public GameObject armasHandler;
-    public GameObject invPociones;
-    public GameObject invArmas;
+    public GameObject invPocionesGENERAL;
+    public GameObject invArmasGENERAL;
 
 
 
@@ -85,22 +86,6 @@ public class Inventario : MonoBehaviour
 
         UpdateArmaInventarioUI();
         UpdatePocionInventarioUI();
-
-        
-        Sprite armaMadera = Resources.Load<Sprite>("SpritesArmas/EspadaMaderaIcono");
-        Arma armita = new Arma("Espadota", "Esta es una espada que hace mucho daño", null, armaMadera, CategoriaItemEnum.Arma, 100, 200, 12, RarezaArmas.Epico);
-        AgregarArma(armita);
-
-        Arma otraarma = new Arma("ESPADON", "Esta es una espada que hace mucho daño", null, null, CategoriaItemEnum.Arma, 100, 200, 12, RarezaArmas.Epico);
-        AgregarArma(otraarma);
-
-        Pocion pocionVida = new Pocion("Pocion de vida", "Esta es una pocion que cura", null, null, CategoriaItemEnum.Pocion, 100, 5);
-
-        Pocion pocionDaño = new Pocion("Pocion de daño", "Esta es una pocion que te da fuerza", null, null, CategoriaItemEnum.Pocion, 100, 10);
-
-        AgregarPocion(pocionVida);
-        AgregarPocion(pocionDaño);
-
 
     }
 
@@ -335,7 +320,8 @@ public class Inventario : MonoBehaviour
 
     public void AbrirInventario()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+
+        if (Input.GetKeyDown(KeyCode.E) && !tiendaObjetos.activeSelf)
         {
             inventoryEnabled = !inventoryEnabled;
         }
@@ -352,15 +338,15 @@ public class Inventario : MonoBehaviour
 
     public void MostrarArmas()
     {
-        invArmas.SetActive(true);
-        invPociones.SetActive(false);
+        invArmasGENERAL.SetActive(true);
+        invPocionesGENERAL.SetActive(false);
         UpdateArmaInventarioUI();
     }
 
     public void MostrarPociones()
     {
-        invPociones.SetActive(true);
-        invArmas.SetActive(false);
+        invPocionesGENERAL.SetActive(true);
+        invArmasGENERAL.SetActive(false);
         UpdatePocionInventarioUI();
     }
 
