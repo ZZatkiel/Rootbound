@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Tienda : MonoBehaviour
 {
-    public List<Dictionary<string, object>> armas;
+    List<Dictionary<string, object>> items;
 
     public GameObject panelTienda;
     public GameObject objetoComprable1;
@@ -30,202 +30,221 @@ public class Tienda : MonoBehaviour
 
     private void Awake()
     {
-        armas = new List<Dictionary<string, object>>()
+        items = new List<Dictionary<string, object>>()
         {
-            // 1. Común
+            // ESPADA 1 - Común
             new Dictionary<string, object>()
             {
-                {"nombre", "Espada Espadita"},
+                {"nombre", "Espada de Madera"},
                 {"descripcion", "Pequeña espada que sirve para principiantes"},
-                {"precio", 20},
                 {"modelo", ""},
                 {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
                 {"daño", 15},
                 {"velocidadAtaque", 5},
                 {"critico", 5},
-                {"rareza", 1}
+                {"rareza", "Común"},
+                {"precio", 20}
             },
-            // 2. Común
-            new Dictionary<string, object>()
-            {
-                {"nombre", "Espada Ligera"},
-                {"descripcion", "Espada común rápida y ligera"},
-                {"precio", 25},
-                {"modelo", ""},
-                {"imagenInventario", ""},
-                {"daño", 18},
-                {"velocidadAtaque", 6},
-                {"critico", 6},
-                {"rareza", 1}
-            },
-            // 3. Común
-            new Dictionary<string, object>()
-            {
-                {"nombre", "Espada Básica"},
-                {"descripcion", "Espada de entrenamiento, confiable y simple"},
-                {"precio", 30},
-                {"modelo", ""},
-                {"imagenInventario", ""},
-                {"daño", 20},
-                {"velocidadAtaque", 5},
-                {"critico", 4},
-                {"rareza", 1}
-            },
-            // 4. Común
-            new Dictionary<string, object>()
-            {
-                {"nombre", "Espada Cortante"},
-                {"descripcion", "Espada común con filo decente"},
-                {"precio", 28},
-                {"modelo", ""},
-                {"imagenInventario", ""},
-                {"daño", 22},
-                {"velocidadAtaque", 5},
-                {"critico", 5},
-                {"rareza", 1}
-            },
-            // 5. Común
+
+            // ESPADA 2 - Común
             new Dictionary<string, object>()
             {
                 {"nombre", "Espada de Hierro"},
-                {"descripcion", "Espada común de hierro reforzado"},
-                {"precio", 30},
+                {"descripcion", "Una espada simple pero resistente, ideal para aventureros novatos"},
                 {"modelo", ""},
                 {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
                 {"daño", 25},
-                {"velocidadAtaque", 4},
-                {"critico", 3},
-                {"rareza", 1}
+                {"velocidadAtaque", 6},
+                {"critico", 7},
+                {"rareza", "Común"},
+                {"precio", 45}
             },
-            // 6. Rara
+
+            // ESPADA 3 - Rara
             new Dictionary<string, object>()
             {
-                {"nombre", "Espada del Guardián"},
-                {"descripcion", "Espada rara que aumenta la defensa"},
+                {"nombre", "Espada del Alba"},
+                {"descripcion", "Brilla con la luz del amanecer, otorgando precisión y poder"},
+                {"modelo", ""},
+                {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
+                {"daño", 40},
+                {"velocidadAtaque", 6},
+                {"critico", 10},
+                {"rareza", "Raro"},
+                {"precio", 120}
+            },
+
+            // ESPADA 4 - Rara
+            new Dictionary<string, object>()
+            {
+                {"nombre", "Espada Carmesí"},
+                {"descripcion", "Forjada con el fuego de un volcán, su filo arde con furia"},
+                {"modelo", ""},
+                {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
+                {"daño", 50},
+                {"velocidadAtaque", 5},
+                {"critico", 12},
+                {"rareza", "Raro"},
+                {"precio", 150}
+            },
+
+            // ESPADA 5 - Épica
+            new Dictionary<string, object>()
+            {
+                {"nombre", "Hoja del Dragón"},
+                {"descripcion", "Creada con escamas de dragón, otorga un poder devastador"},
+                {"modelo", ""},
+                {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
+                {"daño", 70},
+                {"velocidadAtaque", 7},
+                {"critico", 15},
+                {"rareza", "Épico"},
+                {"precio", 300}
+            },
+
+            // ESPADA 6 - Épica
+            new Dictionary<string, object>()
+            {
+                {"nombre", "Espada del Vacío"},
+                {"descripcion", "Su filo corta incluso la esencia del alma"},
+                {"modelo", ""},
+                {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
+                {"daño", 80},
+                {"velocidadAtaque", 6},
+                {"critico", 18},
+                {"rareza", "Épico"},
+                {"precio", 350}
+            },
+
+            // ESPADA 7 - Legendaria
+            new Dictionary<string, object>()
+            {
+                {"nombre", "Excalibur"},
+                {"descripcion", "La espada mítica del rey, símbolo de justicia y poder absoluto"},
+                {"modelo", ""},
+                {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
+                {"daño", 100},
+                {"velocidadAtaque", 7},
+                {"critico", 20},
+                {"rareza", "Legendario"},
+                {"precio", 500}
+            },
+
+            // ESPADA 8 - Legendaria
+            new Dictionary<string, object>()
+            {
+                {"nombre", "Filo del Infinito"},
+                {"descripcion", "Una espada que se alimenta de las almas caídas, incrementando su poder"},
+                {"modelo", ""},
+                {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
+                {"daño", 120},
+                {"velocidadAtaque", 8},
+                {"critico", 25},
+                {"rareza", "Legendario"},
+                {"precio", 700}
+            },
+
+            // ESPADA 9 - Común
+            new Dictionary<string, object>()
+            {
+                {"nombre", "Espada de Bronce"},
+                {"descripcion", "Pesada y rudimentaria, pero confiable"},
+                {"modelo", ""},
+                {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
+                {"daño", 20},
+                {"velocidadAtaque", 5},
+                {"critico", 6},
+                {"rareza", "Común"},
+                {"precio", 35}
+            },
+
+            // ESPADA 10 - Rara
+            new Dictionary<string, object>()
+            {
+                {"nombre", "Espada del Relámpago"},
+                {"descripcion", "Canaliza energía eléctrica para ataques veloces"},
+                {"modelo", ""},
+                {"imagenInventario", ""},
+                {"categoriaItem", "Arma"},
+                {"daño", 55},
+                {"velocidadAtaque", 8},
+                {"critico", 14},
+                {"rareza", "Raro"},
+                {"precio", 200}
+            },
+
+            // POCIÓN 1
+            new Dictionary<string, object>()
+            {
+                {"nombre", "Poción de Daño"},
+                {"descripcion", "Aumenta temporalmente el daño de tus ataques"},
                 {"precio", 75},
                 {"modelo", ""},
                 {"imagenInventario", ""},
-                {"daño", 60},
-                {"velocidadAtaque", 6},
-                {"critico", 15},
-                {"rareza", 2}
+                {"categoriaItem", "Pocion"},
+                {"Duracion", 15},
+                {"Cantidad", 1}
             },
-            // 7. Rara
+
+            // POCIÓN 2
             new Dictionary<string, object>()
             {
-                {"nombre", "Espada de la Aurora"},
-                {"descripcion", "Espada rara con brillo místico"},
-                {"precio", 80},
-                {"modelo", ""},
-                {"imagenInventario", ""},
-                {"daño", 65},
-                {"velocidadAtaque", 7},
-                {"critico", 18},
-                {"rareza", 2}
-            },
-            // 8. Rara
-            new Dictionary<string, object>()
-            {
-                {"nombre", "Espada Veloz"},
-                {"descripcion", "Espada rara ligera y rápida"},
+                {"nombre", "Poción de Velocidad"},
+                {"descripcion", "Incrementa tu velocidad de ataque y movimiento"},
                 {"precio", 90},
                 {"modelo", ""},
                 {"imagenInventario", ""},
-                {"daño", 70},
-                {"velocidadAtaque", 8},
-                {"critico", 20},
-                {"rareza", 2}
+                {"categoriaItem", "Pocion"},
+                {"Duracion", 20},
+                {"Cantidad", 1}
             },
-            // 9. Épica
+
+            // POCIÓN 3
             new Dictionary<string, object>()
             {
-                {"nombre", "Filo Épico"},
-                {"descripcion", "Espada épica con gran daño y velocidad"},
-                {"precio", 250},
+                {"nombre", "Poción de Regeneración"},
+                {"descripcion", "Regenera lentamente tu salud durante un tiempo"},
+                {"precio", 100},
                 {"modelo", ""},
                 {"imagenInventario", ""},
-                {"daño", 250},
-                {"velocidadAtaque", 10},
-                {"critico", 25},
-                {"rareza", 3}
+                {"categoriaItem", "Pocion"},
+                {"Duracion", 25},
+                {"Cantidad", 1}
             },
-            // 10. Épica
+
+            // POCIÓN 4
             new Dictionary<string, object>()
             {
-                {"nombre", "Espada de Fuego"},
-                {"descripcion", "Espada épica que inflige quemaduras"},
-                {"precio", 280},
+                {"nombre", "Poción de Defensa"},
+                {"descripcion", "Refuerza temporalmente tu resistencia al daño"},
+                {"precio", 85},
                 {"modelo", ""},
                 {"imagenInventario", ""},
-                {"daño", 270},
-                {"velocidadAtaque", 9},
-                {"critico", 30},
-                {"rareza", 3}
+                {"categoriaItem", "Pocion"},
+                {"Duracion", 20},
+                {"Cantidad", 1}
             },
-            // 11. Épica
+
+            // POCIÓN 5
             new Dictionary<string, object>()
             {
-                {"nombre", "Espada de Hielo"},
-                {"descripcion", "Espada épica que ralentiza enemigos"},
-                {"precio", 300},
+                {"nombre", "Poción de Energía"},
+                {"descripcion", "Restaura parte de tu energía o maná"},
+                {"precio", 70},
                 {"modelo", ""},
                 {"imagenInventario", ""},
-                {"daño", 300},
-                {"velocidadAtaque", 8},
-                {"critico", 28},
-                {"rareza", 3}
-            },
-            // 12. Legendaria
-            new Dictionary<string, object>()
-            {
-                {"nombre", "Excalibur Legendaria"},
-                {"descripcion", "La legendaria espada de los héroes"},
-                {"precio", 1000},
-                {"modelo", ""},
-                {"imagenInventario", ""},
-                {"daño", 500},
-                {"velocidadAtaque", 12},
-                {"critico", 50},
-                {"rareza", 4}
-            },
-            // 13. Legendaria
-            new Dictionary<string, object>()
-            {
-                {"nombre", "Espada del Dragón"},
-                {"descripcion", "Legendaria espada que arde con fuego dracónico"},
-                {"precio", 1200},
-                {"modelo", ""},
-                {"imagenInventario", ""},
-                {"daño", 550},
-                {"velocidadAtaque", 11},
-                {"critico", 55},
-                {"rareza", 4}
-            },
-            // 14. Legendaria
-            new Dictionary<string, object>()
-            {
-                {"nombre", "Espada Celestial"},
-                {"descripcion", "Legendaria espada con poder divino"},
-                {"precio", 1500},
-                {"modelo", ""},
-                {"imagenInventario", ""},
-                {"daño", 600},
-                {"velocidadAtaque", 12},
-                {"critico", 60},
-                {"rareza", 4}
-            },
-            // 15. Legendaria
-            new Dictionary<string, object>()
-            {
-                {"nombre", "Espada de la Eternidad"},
-                {"descripcion", "Legendaria espada que nunca se rompe"},
-                {"precio", 2000},
-                {"modelo", ""},
-                {"imagenInventario", ""},
-                {"daño", 650},
-                {"velocidadAtaque", 13},
-                {"critico", 65},
-                {"rareza", 4}
+                {"categoriaItem", "Pocion"},
+                {"Duracion", 2},
+                {"Cantidad", 1}
             }
         };
 
@@ -234,14 +253,14 @@ public class Tienda : MonoBehaviour
 
     public List<Dictionary<string, object>> obtenerTresArmasRandom()
     {
-        List<Dictionary<string, object>> copiaArmas = new List<Dictionary<string, object>>(armas);
+        List<Dictionary<string, object>> copiaItems = new List<Dictionary<string, object>>(items);
         List<Dictionary<string, object>> seleccion = new List<Dictionary<string, object>>();
-        
-        for (int i = 0; i < 3 && copiaArmas.Count > 0; i++)
+
+        for (int i = 0; i < 3 && copiaItems.Count > 0; i++)
         {
-            int index = UnityEngine.Random.Range(0, copiaArmas.Count);
-            seleccion.Add(copiaArmas[index]);
-            copiaArmas.RemoveAt(index);
+            int index = UnityEngine.Random.Range(0, copiaItems.Count);
+            seleccion.Add(copiaItems[index]);
+            copiaItems.RemoveAt(index);
         }
 
         return seleccion;
@@ -270,7 +289,7 @@ public class Tienda : MonoBehaviour
     }
 
     public void Recargar()
-    { 
+    {
         if (GameManagerSC.Instancia.scoreManager.obtenerPuntos() >= valorDeRecarga)
         {
             MostrarArmasEnUI();
@@ -297,7 +316,7 @@ public class Tienda : MonoBehaviour
             Debug.Log("No tenes suficientes monedas");
         }
 
-        
+
     }
 
 }
