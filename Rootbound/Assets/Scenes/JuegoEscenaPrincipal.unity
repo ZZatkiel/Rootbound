@@ -18715,6 +18715,7 @@ MonoBehaviour:
   armasHandler: {fileID: 368936873}
   invPocionesGENERAL: {fileID: 150887164}
   invArmasGENERAL: {fileID: 270679900}
+  hotbarHandler: {fileID: 1763848681}
   inventario: {fileID: 368936870}
 --- !u!1001 &529296771
 PrefabInstance:
@@ -58972,7 +58973,7 @@ GameObject:
   - component: {fileID: 1763848684}
   - component: {fileID: 1763848683}
   m_Layer: 5
-  m_Name: Hotbar
+  m_Name: hotbarHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

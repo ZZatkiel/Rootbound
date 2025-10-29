@@ -86,18 +86,19 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             Slot other = res.gameObject.GetComponent<Slot>();
             if (other != null)
             {
-                // solo permitimos mover entre la misma categoria
-                if (slot.GetCategoria() != other.GetCategoria())
-                {
-                    Debug.Log("No puedes mover entre diferentes categorias (por ahora).");
-                    return;
-                }
-
                 // pedir al inventario que mueva/intercambie
                 if (Inventario.Instancia != null)
                 {
-                    Inventario.Instancia.Swap(slot.GetCategoria(), slot.GetIndex(), other.GetCategoria(), other.GetIndex());
-                    Debug.Log($"Haciendo el swap {slot.GetCategoria()}, {slot.GetIndex()}, {other.GetCategoria()}, {other.GetIndex()}");
+                    bool ok = Inventario.Instancia.Swap(slot.GetCategoria(), slot.GetIndex(), other.GetCategoria(), other.GetIndex());
+                    if (!ok)
+                    {
+                        Debug.Log("Movimiento no válido — el item volverá a su lugar.");
+                        // No necesitamos hacer nada más: como no se movió, el item sigue en el slot original.
+                    }
+                    else
+                    {
+                        Debug.Log($"Swap realizado: {slot.GetCategoria()}, {slot.GetIndex()} -> {other.GetCategoria()}, {other.GetIndex()}");
+                    }
                 }
                 return;
             }

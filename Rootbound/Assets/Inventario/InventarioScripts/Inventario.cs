@@ -16,16 +16,19 @@ public class Inventario : MonoBehaviour
     //Elementos del array Externo
     int allSlotsArmas;
     int allSlotsPociones;
+    int allSlotsHotbar;
     public GameObject pocionHandler;
     public GameObject armasHandler;
     public GameObject invPocionesGENERAL;
     public GameObject invArmasGENERAL;
 
+    public GameObject hotbarHandler;
 
 
     // Array Externo o visual donde se ve todo
     GameObject[] PocionesInventarioUI;
     GameObject[] ArmasInventarioUI;
+    GameObject[] HotbarInventarioUI;
 
 
     // Parte UI
@@ -51,15 +54,18 @@ public class Inventario : MonoBehaviour
         allSlotsArmas = armasHandler.transform.childCount;
         allSlotsPociones = pocionHandler.transform.childCount;
 
+        allSlotsHotbar = hotbarHandler.transform.childCount;
+
         PocionesInventarioUI = new GameObject[allSlotsPociones];
         ArmasInventarioUI = new GameObject[allSlotsArmas];
+        HotbarInventarioUI = new GameObject[allSlotsHotbar];
 
 
         for (int i = 0; i < allSlotsArmas; i++)
         {
             ArmasInventarioUI[i] = armasHandler.transform.GetChild(i).gameObject;
             ArmasInventarioUI[i].GetComponent<Slot>().InicializarSlot();
-            ArmasInventarioUI[i].GetComponent<Slot>().EstablecerIndiceYCategoria(i, CategoriaItemEnum.Arma);
+            ArmasInventarioUI[i].GetComponent<Slot>().EstablecerIndiceYCategoria(i, CategoriaDelSlotEnum.ArmaSlot);
             if (ArmasInventarioUI[i].GetComponent<DragHandler>() == null)
                 ArmasInventarioUI[i].AddComponent<DragHandler>();
         }
@@ -69,9 +75,19 @@ public class Inventario : MonoBehaviour
         {
             PocionesInventarioUI[i] = pocionHandler.transform.GetChild(i).gameObject;
             PocionesInventarioUI[i].GetComponent<Slot>().InicializarSlot();
-            PocionesInventarioUI[i].GetComponent<Slot>().EstablecerIndiceYCategoria(i, CategoriaItemEnum.Pocion);
+            PocionesInventarioUI[i].GetComponent<Slot>().EstablecerIndiceYCategoria(i, CategoriaDelSlotEnum.PocionSlot);
             if (PocionesInventarioUI[i].GetComponent<DragHandler>() == null)
                 PocionesInventarioUI[i].AddComponent<DragHandler>();
+
+        }
+
+        for (int i = 0; i < allSlotsHotbar; i++)
+        {
+            HotbarInventarioUI[i] = hotbarHandler.transform.GetChild(i).gameObject;
+            HotbarInventarioUI[i].GetComponent<Slot>().InicializarSlot();
+            HotbarInventarioUI[i].GetComponent<Slot>().EstablecerIndiceYCategoria(i, CategoriaDelSlotEnum.HotbarSlot);
+            if (HotbarInventarioUI[i].GetComponent<DragHandler>() == null)
+                HotbarInventarioUI[i].AddComponent<DragHandler>();
 
         }
 
@@ -80,10 +96,13 @@ public class Inventario : MonoBehaviour
 
         Item[] pociones = new Item[allSlotsPociones];
         Item[] armas = new Item[allSlotsArmas];
+        Item[] hotbar = new Item[allSlotsHotbar];
 
         ItemsTotales.Add("Pociones", pociones);
         ItemsTotales.Add("Armas", armas);
+        ItemsTotales.Add("Hotbar", hotbar);
 
+        UpdateHotbarInventarioUI();
         UpdateArmaInventarioUI();
         UpdatePocionInventarioUI();
 
@@ -192,55 +211,160 @@ public class Inventario : MonoBehaviour
 
     // MOVER / INTERCAMBIO ITEMS (lo usa el dragHandler)
 
-    public void Swap(CategoriaItemEnum primeraCategoria, int primerIndice, CategoriaItemEnum segundaCategoria, int segundoIndice)
+    public bool Swap(CategoriaDelSlotEnum primeraCategoria, int primerIndice, CategoriaDelSlotEnum segundaCategoria, int segundoIndice)
     {
-        if (primeraCategoria != segundaCategoria)
+        // Mapear slot category -> clave del diccionario
+        string KeyFor(CategoriaDelSlotEnum cat)
         {
-            Debug.Log("Son dos categorias diferentes, no se puede mover de un inventario a otro");
-            return;
+            return cat switch
+            {
+                CategoriaDelSlotEnum.ArmaSlot => "Armas",
+                CategoriaDelSlotEnum.PocionSlot => "Pociones",
+                CategoriaDelSlotEnum.HotbarSlot => "Hotbar",
+                _ => null
+            };
         }
 
-        string llave = primeraCategoria == CategoriaItemEnum.Arma ? "Armas" : "Pociones";
-
-
-
-        Debug.Log(llave);
-        Debug.Log(primerIndice);
-
-
-
-        if (primerIndice < 0 || primerIndice >= ItemsTotales[llave].Length || segundoIndice < 0 || segundoIndice >= ItemsTotales[llave].Length)
+        // Mapear item.CategoriaItem -> clave del diccionario
+        string ItemCategoryKey(CategoriaItemEnum cat)
         {
-            Debug.Log("El indice es invalido para moverlo");
-            return;
-        } 
-
-        if (ItemsTotales[llave][primerIndice] == null)
-        {
-
-            Debug.Log(ItemsTotales[llave][primerIndice]);
-            return;
+            return cat switch
+            {
+                CategoriaItemEnum.Arma => "Armas",
+                CategoriaItemEnum.Pocion => "Pociones",
+                _ => null
+            };
         }
 
-        if (ItemsTotales[llave][segundoIndice] == null)
+        // Helper para actualizar UIs implicadas
+        void UpdateUIFor(string key)
         {
-            Debug.Log("Necesitas tener un objeto para poder intercambiar");
-            return;
+            if (key == "Armas") UpdateArmaInventarioUI();
+            else if (key == "Pociones") UpdatePocionInventarioUI();
+            else if (key == "Hotbar") UpdateHotbarInventarioUI();
         }
 
-        if (ItemsTotales[llave][primerIndice] != null && ItemsTotales[llave][segundoIndice] != null)
+        string llavePrimaria = KeyFor(primeraCategoria);
+        string llaveSecundaria = KeyFor(segundaCategoria);
+
+        if (llavePrimaria == null || llaveSecundaria == null)
         {
-            // SWAP
-
-            Item temp = ItemsTotales[llave][segundoIndice];
-            ItemsTotales[llave][segundoIndice] = ItemsTotales[llave][primerIndice];
-            ItemsTotales[llave][primerIndice] = temp;
-
+            Debug.Log("Categoria de slot no mapeada en ItemsTotales.");
+            return false;
         }
 
-        if (llave == "Pociones") UpdatePocionInventarioUI();
-        else UpdateArmaInventarioUI();
+        Item[] ArrayPrimaria = ItemsTotales[llavePrimaria];
+        Item[] ArraySecundaria = ItemsTotales[llaveSecundaria];
 
+        // Validar índices
+        if (primerIndice < 0 || primerIndice >= ArrayPrimaria.Length || segundoIndice < 0 || segundoIndice >= ArraySecundaria.Length)
+        {
+            Debug.Log("Indices invalidos para Swap.");
+            return false;
+        }
+
+        Item itemPrimario = ArrayPrimaria[primerIndice];
+        Item itemSecundario = ArraySecundaria[segundoIndice];
+
+        // Caso: mismo array -> permitir move (a vacio) o swap
+        if (llavePrimaria == llaveSecundaria)
+        {
+            // Move a vacío
+            if (itemPrimario != null && itemSecundario == null)
+            {
+                ArraySecundaria[segundoIndice] = itemPrimario;
+                ArrayPrimaria[primerIndice] = null;
+                UpdateUIFor(llavePrimaria);
+                return true;
+            }
+
+            // Swap si ambos existen
+            if (itemPrimario != null && itemSecundario != null)
+            {
+                Item tmp = ArraySecundaria[segundoIndice];
+                ArraySecundaria[segundoIndice] = ArrayPrimaria[primerIndice];
+                ArrayPrimaria[primerIndice] = tmp;
+                UpdateUIFor(llavePrimaria);
+                return true;
+            }
+
+            Debug.Log("No hay nada que mover en el mismo array.");
+            return false;
+        }
+
+        // Distinto array: regla general
+        // - No permitimos Arma <-> Pocion directamente (sin Hotbar).
+        // - Hotbar puede recibir tanto Arma como Pocion, pero el item debe ser compatible con el slot destino.
+        bool origenEsHotbar = llavePrimaria == "Hotbar";
+        bool destinoEsHotbar = llaveSecundaria == "Hotbar";
+
+        // Rechazar Arma <-> Pocion directos
+        if (!origenEsHotbar && !destinoEsHotbar)
+        {
+            Debug.Log("Movimiento directo entre Armas y Pociones no permitido.");
+            return false;
+        }
+
+        // Si no hay item en origen, no hay nada que mover
+        if (itemPrimario == null)
+        {
+            Debug.Log("No hay item en el slot de origen para mover.");
+            return false;
+        }
+
+        // Determinar clave de la categoria del item origen (p. ej. "Armas" o "Pociones")
+        string llaveItemPrim = ItemCategoryKey(itemPrimario.CategoriaItem);
+        if (llaveItemPrim == null)
+        {
+            Debug.Log("Item de origen tiene CategoriaItem inválida.");
+            return false;
+        }
+
+        // Validar compatibilidad item -> categoria destino:
+        // - Si destino es Hotbar: permitido (Hotbar acepta todo).
+        // - Si destino es Armas/Pociones: el item debe coincidir con esa categoria.
+        if (!destinoEsHotbar && llaveItemPrim != llaveSecundaria)
+        {
+            Debug.Log("El item origen no es compatible con la categoria destino.");
+            return false;
+        }
+
+        // Caso MOVE (destino vacío)
+        if (itemSecundario == null)
+        {
+            ArraySecundaria[segundoIndice] = itemPrimario;
+            ArrayPrimaria[primerIndice] = null;
+            UpdateUIFor(llavePrimaria);
+            UpdateUIFor(llaveSecundaria);
+            return true;
+        }
+
+        // Caso SWAP (ambos con item): validar compatibilidad recíproca
+        // Obtener la clave de categoria del item secundario (si es null, no es válido)
+        string llaveItemSec = ItemCategoryKey(itemSecundario.CategoriaItem);
+        if (llaveItemSec == null)
+        {
+            Debug.Log("Item destino tiene CategoriaItem inválida.");
+            return false;
+        }
+
+        // El item secundario debe poder ir al array origen:
+        // - Si origen es Hotbar: siempre permitido
+        // - Si origen es Armas/Pociones: llaveItemSec debe coincidir con llavePrimaria
+        if (!origenEsHotbar && llaveItemSec != llavePrimaria)
+        {
+            Debug.Log("El item destino no es compatible con la categoria origen.");
+            return false;
+        }
+
+        // Si llegamos hasta acá, ambos items son compatibles -> swap
+        Item tmpSwap = ArraySecundaria[segundoIndice];
+        ArraySecundaria[segundoIndice] = ArrayPrimaria[primerIndice];
+        ArrayPrimaria[primerIndice] = tmpSwap;
+
+        UpdateUIFor(llavePrimaria);
+        UpdateUIFor(llaveSecundaria);
+        return true;
     }
 
 
@@ -273,6 +397,16 @@ public class Inventario : MonoBehaviour
         }
     }
 
+
+    public void UpdateHotbarInventarioUI()
+    {
+        Item[] hotbarTotales = ItemsTotales["Hotbar"];
+
+        for (int i = 0; i < HotbarInventarioUI.Length; i++)
+        {
+            HotbarInventarioUI[i].GetComponent<Slot>().SetItem(hotbarTotales[i]);
+        }
+    }
 
     // Metodos para Debuggear
 

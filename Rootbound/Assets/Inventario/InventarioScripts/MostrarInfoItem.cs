@@ -65,7 +65,7 @@ public class MostrarInfoItem : MonoBehaviour , IPointerClickHandler
 
     public void ClasificacionDeInformacion(Slot datoObtenido)
     {
-        if (datoObtenido.GetCategoria() == CategoriaItemEnum.Arma)
+        if (datoObtenido.GetCategoria() == CategoriaDelSlotEnum.ArmaSlot)
         {
             LimpiarTexto(listaArma);
             Item item = datoObtenido.GetItem();
