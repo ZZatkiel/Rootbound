@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ArbolVida : MonoBehaviour
 {
-    [Header("Configuraci�n de Vida del arbol")]
+    [Header("Configuracion de Vida del arbol")]
     [SerializeField] private int vidaMaxima = 100;
 
     [Header("Referencia a la UI de Game Over")]
@@ -26,7 +26,7 @@ public class ArbolVida : MonoBehaviour
         if (arbolDestruido) return;
 
         VidaActual = Mathf.Max(VidaActual - cantidad, 0);
-        Debug.Log($" Arbol recibio {cantidad} de da�o. Vida actual: {VidaActual}");
+        Debug.Log($" Arbol recibio {cantidad} de daño. Vida actual: {VidaActual}");
 
         if (VidaActual <= 0)
             Morir();
@@ -41,7 +41,7 @@ public class ArbolVida : MonoBehaviour
         if (arbolDestruido) return;
         arbolDestruido = true;
 
-        Debug.Log(" El Arbol ha muerto. �Game Over!");
+        Debug.Log(" El Arbol ha muerto. Game Over!");
 
         if (panelGameOver != null)
         {
