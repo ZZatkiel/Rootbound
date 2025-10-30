@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class ArbolVida : MonoBehaviour
 {
-    [Header("Configuración de Vida del Árbol")]
+    [Header("Configuraciï¿½n de Vida del arbol")]
     [SerializeField] private int vidaMaxima = 100;
 
     [Header("Referencia a la UI de Game Over")]
-    [SerializeField] private GameObject panelGameOver; // UI que se activará al morir el árbol
+    [SerializeField] private GameObject panelGameOver; // UI que se activarï¿½ al morir el ï¿½rbol
 
     public int VidaActual { get; private set; }
 
@@ -16,17 +16,17 @@ public class ArbolVida : MonoBehaviour
     {
         VidaActual = vidaMaxima;
 
-        // Asegura que el panel esté oculto al iniciar
+        // Asegura que el panel esto oculto al iniciar
         if (panelGameOver != null)
             panelGameOver.SetActive(false);
     }
 
-    public void RecibirDaño(int cantidad)
+    public void RecibirDaÃ±o(int cantidad)
     {
         if (arbolDestruido) return;
 
         VidaActual = Mathf.Max(VidaActual - cantidad, 0);
-        Debug.Log($" Árbol recibió {cantidad} de daño. Vida actual: {VidaActual}");
+        Debug.Log($" Arbol recibio {cantidad} de daï¿½o. Vida actual: {VidaActual}");
 
         if (VidaActual <= 0)
             Morir();
@@ -41,7 +41,7 @@ public class ArbolVida : MonoBehaviour
         if (arbolDestruido) return;
         arbolDestruido = true;
 
-        Debug.Log(" El árbol ha muerto. ¡Game Over!");
+        Debug.Log(" El Arbol ha muerto. ï¿½Game Over!");
 
         if (panelGameOver != null)
         {
