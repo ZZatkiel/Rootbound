@@ -70,6 +70,14 @@ public class MovimientoDelPersonaje : MonoBehaviour
         // mover
         controller.Move(movimientoWorld * velocidad * Time.deltaTime);
 
+        // rotar el cubo hacia la dirección de movimiento
+        if (movimientoWorld.magnitude > 0.1f)
+        {
+            // rota suavemente hacia la dirección de movimiento
+            Quaternion targetRotation = Quaternion.LookRotation(movimientoWorld);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+        }
+
         // --- GRAVEDAD Y SALTO ---
         estaEnSuelo = controller.isGrounded;
         if (estaEnSuelo && velocidadVertical.y < 0f)

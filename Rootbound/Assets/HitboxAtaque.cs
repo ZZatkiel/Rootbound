@@ -3,8 +3,8 @@ using System.Collections;
 
 public class HitboxAtaque : MonoBehaviour
 {
-    [Header("Par·metros de Ataque")]
-    public float daÒoAtaque = 10f;
+    [Header("ParÔøΩmetros de Ataque")]
+    public float da√±oAtaque = 10f;
     public float tiempoEntreAtaques = 1f; // Cooldown: 1 segundo
     private bool puedeAtacar = true; // Control del cooldown
     private PersecucionEnemigo scriptPrincipal;
@@ -17,20 +17,20 @@ public class HitboxAtaque : MonoBehaviour
             Debug.LogError("HitboxAtaque requiere el script PersecucionEnemigo en el objeto padre.");
         }
 
-        // Si el objeto 'HitboxAtaque' (o su Collider) est· deshabilitado por defecto, 
-        // °DEBE ESTAR HABILITADO AHORA! Si estuviera deshabilitado, OnTriggerStay nunca se llamarÌa.
-        // Aseg˙rate de que el GameObject 'HitboxAtaque' est· ACTIVO en el Editor.
+        // Si el objeto 'HitboxAtaque' (o su Collider) estÔøΩ deshabilitado por defecto, 
+        // ÔøΩDEBE ESTAR HABILITADO AHORA! Si estuviera deshabilitado, OnTriggerStay nunca se llamarÔøΩa.
+        // AsegÔøΩrate de que el GameObject 'HitboxAtaque' estÔøΩ ACTIVO en el Editor.
     }
 
     private void OnTriggerStay(Collider other)
     {
-        // Solo verificamos si el objetivo es un Tag v·lido (Player o Arbol)
+        // Solo verificamos si el objetivo es un Tag vÔøΩlido (Player o Arbol)
         bool esJugador = other.CompareTag(scriptPrincipal.tagJugador);
         bool esArbol = other.CompareTag(scriptPrincipal.tagArbol);
 
         if ((esJugador || esArbol) && puedeAtacar)
         {
-            // Ejecutar el ataque si es un objetivo y no est· en cooldown
+            // Ejecutar el ataque si es un objetivo y no estÔøΩ en cooldown
             StartCoroutine(CicloDeAtaque(other.gameObject));
         }
     }
@@ -39,15 +39,15 @@ public class HitboxAtaque : MonoBehaviour
     {
         puedeAtacar = false;
 
-        // --- 1. ACTIVACI”N Y EJECUCI”N DEL ATAQUE ---
+        // --- 1. ACTIVACION Y EJECUCIÔøΩN DEL ATAQUE ---
 
-        // LOG DE CONFIRMACI”N: Se ejecutar· cada 1s si el objetivo est· en rango.
-        Debug.Log($"---> [ATAQUE CORTADISTANCIA EJECUTADO] Objetivo: {target.name}. DaÒo: {daÒoAtaque}. Inicio del golpe: {Time.time}");
+        // LOG DE CONFIRMACION: Se ejecutarÔøΩ cada 1s si el objetivo estÔøΩ en rango.
+        Debug.Log($"---> [ATAQUE CORTADISTANCIA EJECUTADO] Objetivo: {target.name}. Da√±o: {da√±oAtaque}. Inicio del golpe: {Time.time}");
 
         // --- 2. COOLDOWN ---
         yield return new WaitForSeconds(tiempoEntreAtaques);
 
-        // --- 3. FINALIZACI”N DEL ATAQUE ---
+        // --- 3. FINALIZACIÔøΩN DEL ATAQUE ---
         Debug.Log($"<--- [COOLDOWN FINALIZADO]. {target.name} puede ser atacado de nuevo.");
 
         // Permitir el siguiente ataque
