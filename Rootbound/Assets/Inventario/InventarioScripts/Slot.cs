@@ -12,7 +12,7 @@ public class Slot : MonoBehaviour
     Sprite imageSlot;
 
     int indice = -1;
-    CategoriaItemEnum categoria = CategoriaItemEnum.Indefinido;
+    CategoriaDelSlotEnum categoria = CategoriaDelSlotEnum.IndefinidoSlot;
     public void InicializarSlot()
     {
         iconoDelSlot = GetComponent<Image>();
@@ -39,7 +39,7 @@ public class Slot : MonoBehaviour
 
     }
 
-    public void EstablecerIndiceYCategoria(int indiceDelSlot, CategoriaItemEnum categoriaDelSlot)
+    public void EstablecerIndiceYCategoria(int indiceDelSlot, CategoriaDelSlotEnum categoriaDelSlot)
     {
         indice = indiceDelSlot;
         categoria = categoriaDelSlot;
@@ -87,7 +87,7 @@ public class Slot : MonoBehaviour
     }
 
     public int GetIndex() => indice;
-    public CategoriaItemEnum GetCategoria() => categoria;
+    public CategoriaDelSlotEnum GetCategoria() => categoria;
     public Item GetItem() => item;
 
     public Sprite GetImageSlot() => imageSlot;

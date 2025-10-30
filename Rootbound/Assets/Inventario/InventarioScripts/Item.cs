@@ -1,5 +1,12 @@
 using UnityEngine;
 
+public enum CategoriaDelSlotEnum
+{
+    ArmaSlot,
+    PocionSlot,
+    IndefinidoSlot,
+    HotbarSlot
+}
 public enum CategoriaItemEnum
 {
     Arma,
