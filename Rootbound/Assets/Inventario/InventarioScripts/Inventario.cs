@@ -9,6 +9,8 @@ public class Inventario : MonoBehaviour
     public static Inventario Instancia { get; private set; } // Singleton
 
     public GameObject tiendaObjetos;
+    public GameObject MenuPausa;
+    public MonoBehaviour[] scriptsADesactivar;
 
     // Array Interno donde estan todos los items
     Dictionary<string, Item[]> ItemsTotales = new Dictionary<string, Item[]>();
@@ -478,19 +480,20 @@ public class Inventario : MonoBehaviour
 
     public void AbrirInventario()
     {
-
-        if (Input.GetKeyDown(KeyCode.E) && !tiendaObjetos.activeSelf)
+        if (Input.GetKeyDown(KeyCode.E) && !tiendaObjetos.activeSelf && !MenuPausa.activeSelf)
         {
             inventoryEnabled = !inventoryEnabled;
-        }
+            inventario.SetActive(inventoryEnabled);
 
-        if (inventoryEnabled)
-        {
-            inventario.SetActive(true);
-        }
-        else
-        {
-            inventario.SetActive(false);
+            // Activar/desactivar scripts de movimiento/cámara
+            foreach (var script in scriptsADesactivar)
+            {
+                script.enabled = !inventoryEnabled;
+            }
+
+            // Mostrar u ocultar cursor
+            Cursor.visible = inventoryEnabled;
+            Cursor.lockState = inventoryEnabled ? CursorLockMode.None : CursorLockMode.Locked;
         }
     }
 
