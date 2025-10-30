@@ -39,18 +39,29 @@ public class HitboxAtaque : MonoBehaviour
     {
         puedeAtacar = false;
 
-        // --- 1. ACTIVACIÓN Y EJECUCIÓN DEL ATAQUE ---
+        // --- 1. EJECUCIÓN DEL ATAQUE ---
 
-        // LOG DE CONFIRMACIÓN: Se ejecutará cada 1s si el objetivo está en rango.
-        Debug.Log($"---> [ATAQUE CORTADISTANCIA EJECUTADO] Objetivo: {target.name}. Daño: {dañoAtaque}. Inicio del golpe: {Time.time}");
+        // Intentar obtener el componente Salud del objetivo
+        Salud saludObjetivo = target.GetComponent<Salud>();
+
+        if (saludObjetivo != null)
+        {
+            // ¡El ataque aplica el daño!
+            saludObjetivo.RecibirDano(dañoAtaque);
+
+            // LOG DE CONFIRMACIÓN: Se ejecutará cada 1s si el objetivo está en rango.
+            Debug.Log($"---> [ATAQUE CORTADISTANCIA EJECUTADO y Aplicado] Objetivo: {target.name}. Daño: {dañoAtaque}. Inicio del golpe: {Time.time}");
+        }
+        else
+        {
+            // Log de fallo de daño: Útil si el Trigger funciona, pero el objeto atacado no tiene el script Salud.
+            Debug.LogWarning($"El objetivo {target.name} fue golpeado, pero no tiene el script 'Salud.cs'.");
+        }
 
         // --- 2. COOLDOWN ---
         yield return new WaitForSeconds(tiempoEntreAtaques);
 
         // --- 3. FINALIZACIÓN DEL ATAQUE ---
-        Debug.Log($"<--- [COOLDOWN FINALIZADO]. {target.name} puede ser atacado de nuevo.");
-
-        // Permitir el siguiente ataque
         puedeAtacar = true;
     }
 }
