@@ -56,8 +56,6 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         if (cg != null) cg.blocksRaycasts = false;
 
 
-
-
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -83,7 +81,8 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         foreach (var res in results)
         {
-            Slot other = res.gameObject.GetComponent<Slot>();
+            Slot other = res.gameObject.GetComponentInParent<Slot>();
+
             if (other != null)
             {
                 // pedir al inventario que mueva/intercambie

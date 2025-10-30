@@ -213,8 +213,10 @@ public class Inventario : MonoBehaviour
 
     public bool Swap(CategoriaDelSlotEnum primeraCategoria, int primerIndice, CategoriaDelSlotEnum segundaCategoria, int segundoIndice)
     {
+        Debug.Log("PASO POR ACA 2");
+
         // Mapear slot category -> clave del diccionario
-        string KeyFor(CategoriaDelSlotEnum cat)
+        string ObtenerLaCategoriaDelSlot(CategoriaDelSlotEnum cat)
         {
             return cat switch
             {
@@ -226,7 +228,7 @@ public class Inventario : MonoBehaviour
         }
 
         // Mapear item.CategoriaItem -> clave del diccionario
-        string ItemCategoryKey(CategoriaItemEnum cat)
+        string ObtenerLaCategoriaDelItem(CategoriaItemEnum cat)
         {
             return cat switch
             {
@@ -244,43 +246,55 @@ public class Inventario : MonoBehaviour
             else if (key == "Hotbar") UpdateHotbarInventarioUI();
         }
 
-        string llavePrimaria = KeyFor(primeraCategoria);
-        string llaveSecundaria = KeyFor(segundaCategoria);
+        // Obtengo el dato de que tipo es la CATEGORIA DEL PRIMER SLOT SELECCIONADO Y EL SEGUNDO SELECCIONADO
+        string llavePrimaria = ObtenerLaCategoriaDelSlot(primeraCategoria);
+        string llaveSecundaria = ObtenerLaCategoriaDelSlot(segundaCategoria);
 
+        // SI SELECCIONO UN LUGAR DONDE NO HAY SLOT O SELECCIONO UN SLOT EL CUAL NO ESTA DENTRO DEL ENUM, ENTONCES NO SE PODRA HACER EL INTERCAMBIO Y ME RETORNARA Y NO SE JECETURA LO OTRO
         if (llavePrimaria == null || llaveSecundaria == null)
         {
             Debug.Log("Categoria de slot no mapeada en ItemsTotales.");
             return false;
         }
 
+        // OBTENGO LA LISTA INTERNA DEL ITEM SELECCIONADO, EN EL CUAL DESPUES USO PARA OBTENER EL ITEM
         Item[] ArrayPrimaria = ItemsTotales[llavePrimaria];
         Item[] ArraySecundaria = ItemsTotales[llaveSecundaria];
 
-        // Validar índices
+        // VERIFICO SI LOS INDICES SON VALIDOS, Y EN EL CASO QUE NO LO SEA, NO SE REALIZARA EL SWAP
         if (primerIndice < 0 || primerIndice >= ArrayPrimaria.Length || segundoIndice < 0 || segundoIndice >= ArraySecundaria.Length)
         {
             Debug.Log("Indices invalidos para Swap.");
             return false;
         }
 
+        // OBTENGO LOS ITEMS SELECCIONADOS EN EL DRAG AND DROP
         Item itemPrimario = ArrayPrimaria[primerIndice];
         Item itemSecundario = ArraySecundaria[segundoIndice];
 
-        // Caso: mismo array -> permitir move (a vacio) o swap
+        Debug.Log($"ESTE ES EL ITEM SECUNDARIO: {itemSecundario}");
+
+        // CASO 1: SI LAS LISTA DE LA UI SON LAS MISMAS, ENTONCES SE REALIZARA EL SWAP OSEA
+        // - ARMA <-> ARMA
+        // - POCION <-> POCION
+        // - HOTBAR <-> HOTBAR
+
         if (llavePrimaria == llaveSecundaria)
         {
-            // Move a vacío
+            // HAGO EL SWAP ENTRE EL PRIMER SLOT QUE TIENE EL ITEM Y EL SEGUNDO SLOT QUE NO TIENE ITEM
             if (itemPrimario != null && itemSecundario == null)
             {
+                Debug.Log("HAGO EL SWAP ENTRE EL PRIMER SLOT QUE TIENE EL ITEM Y EL SEGUNDO SLOT QUE NO TIENE ITEM");
                 ArraySecundaria[segundoIndice] = itemPrimario;
                 ArrayPrimaria[primerIndice] = null;
                 UpdateUIFor(llavePrimaria);
                 return true;
             }
 
-            // Swap si ambos existen
+            // HAGO EL SWAP ENTRE EL PRIMER SLOT QUE TIENE EL ITEM Y EL SEGUNDO SLOT QUE TIENE EL ITEM
             if (itemPrimario != null && itemSecundario != null)
             {
+                Debug.Log("HAGO EL SWAP ENTRE EL PRIMER SLOT QUE TIENE EL ITEM Y EL SEGUNDO SLOT QUE TIENE EL ITEM");
                 Item tmp = ArraySecundaria[segundoIndice];
                 ArraySecundaria[segundoIndice] = ArrayPrimaria[primerIndice];
                 ArrayPrimaria[primerIndice] = tmp;
@@ -291,19 +305,14 @@ public class Inventario : MonoBehaviour
             Debug.Log("No hay nada que mover en el mismo array.");
             return false;
         }
-
+       
         // Distinto array: regla general
-        // - No permitimos Arma <-> Pocion directamente (sin Hotbar).
         // - Hotbar puede recibir tanto Arma como Pocion, pero el item debe ser compatible con el slot destino.
+        // - Dicho de esta forma los items(ARMA O POCION) que tenga el Hotbar deberan corresponder a su contenedor (ARMAS O POCIONES)
+
         bool origenEsHotbar = llavePrimaria == "Hotbar";
         bool destinoEsHotbar = llaveSecundaria == "Hotbar";
 
-        // Rechazar Arma <-> Pocion directos
-        if (!origenEsHotbar && !destinoEsHotbar)
-        {
-            Debug.Log("Movimiento directo entre Armas y Pociones no permitido.");
-            return false;
-        }
 
         // Si no hay item en origen, no hay nada que mover
         if (itemPrimario == null)
@@ -313,7 +322,8 @@ public class Inventario : MonoBehaviour
         }
 
         // Determinar clave de la categoria del item origen (p. ej. "Armas" o "Pociones")
-        string llaveItemPrim = ItemCategoryKey(itemPrimario.CategoriaItem);
+        string llaveItemPrim = ObtenerLaCategoriaDelItem(itemPrimario.CategoriaItem);
+
         if (llaveItemPrim == null)
         {
             Debug.Log("Item de origen tiene CategoriaItem inválida.");
@@ -328,6 +338,20 @@ public class Inventario : MonoBehaviour
             Debug.Log("El item origen no es compatible con la categoria destino.");
             return false;
         }
+        if (destinoEsHotbar && llaveItemPrim == llavePrimaria)
+        {
+            Item tmp = ArraySecundaria[segundoIndice];
+            ArraySecundaria[segundoIndice] = ArrayPrimaria[primerIndice];
+            ArrayPrimaria[primerIndice] = tmp;
+            UpdateUIFor(llavePrimaria);
+            UpdateUIFor(llaveSecundaria);
+            return true;
+        }
+        if (origenEsHotbar && llaveItemPrim == llaveSecundaria)
+        {
+            Debug.Log("SE PUEDE METER ACA");
+        }
+
 
         // Caso MOVE (destino vacío)
         if (itemSecundario == null)
@@ -341,7 +365,7 @@ public class Inventario : MonoBehaviour
 
         // Caso SWAP (ambos con item): validar compatibilidad recíproca
         // Obtener la clave de categoria del item secundario (si es null, no es válido)
-        string llaveItemSec = ItemCategoryKey(itemSecundario.CategoriaItem);
+        string llaveItemSec = ObtenerLaCategoriaDelItem(itemSecundario.CategoriaItem);
         if (llaveItemSec == null)
         {
             Debug.Log("Item destino tiene CategoriaItem inválida.");
