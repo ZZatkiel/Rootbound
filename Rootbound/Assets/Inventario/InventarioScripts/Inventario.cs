@@ -491,6 +491,7 @@ public class Inventario : MonoBehaviour
                 script.enabled = !inventoryEnabled;
             }
 
+
             // Mostrar u ocultar cursor
             Cursor.visible = inventoryEnabled;
             Cursor.lockState = inventoryEnabled ? CursorLockMode.None : CursorLockMode.Locked;

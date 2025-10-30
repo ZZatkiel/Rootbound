@@ -5,10 +5,16 @@ using UnityEngine.SceneManagement;
 public class GameManagerPausa : MonoBehaviour
 {
     public GameObject panelPausa;
+    public GameObject inventario;
     private bool juegoPausado = false;
 
     void Update()
     {
+
+        if (inventario != null && inventario.activeSelf)
+            return;
+
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             juegoPausado = !juegoPausado;
