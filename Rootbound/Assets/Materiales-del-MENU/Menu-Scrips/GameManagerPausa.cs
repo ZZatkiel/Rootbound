@@ -1,47 +1,49 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class GameManagerPausa : MonoBehaviour
 {
     public GameObject panelPausa;
-    private bool juegoPausado = false; //le damos valor bolleano false a la variable juegoPausado
-
-    private void Awake()
-
-    {
-        panelPausa.SetActive(false); // Asegura de que el panel de pausa esté desactivado al inicio
-    }
+    private bool juegoPausado = false;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) // Detecta si se presiona la tecla ESC
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Debug.Log("Presioné ESC"); //  debería verse en la consola
-            if (juegoPausado)
-            {
-                Reanudar();
-            }
-            else
-            {
-                Pausar();
-            }
+            juegoPausado = !juegoPausado;
+
+            if (juegoPausado) PausarJuego();
+            else ReanudarJuego();
         }
     }
 
-    public void Pausar()
+    public void PausarJuego()
     {
-        Debug.Log("Juego pausado"); //muestra en consola que el juego está pausado
-        panelPausa.SetActive(true); // Activa el panel de pausa
+        panelPausa.SetActive(true);
+
+        // pausar el juego
         Time.timeScale = 0f;
-        juegoPausado = true;
+
+        // desbloquear y mostrar cursor para poder clicar en la UI
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+
     }
 
-    public void Reanudar()
+    public void ReanudarJuego()
     {
-        Debug.Log("Juego reanudado"); // muestra en consola que el juego está reanudado
-        panelPausa.SetActive(false);// Desactiva el panel de pausa
+        panelPausa.SetActive(false);
+
+        // reanudar el tiempo
         Time.timeScale = 1f;
-        juegoPausado = false;
+
+        // opcional: volver a bloquear cursor (si tu juego lo usa)
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+
     }
 
     public void VolverAlMenu()
@@ -50,6 +52,7 @@ public class GameManagerPausa : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("InterfazMenu"); // carga la escena del menú principal
     }
+
 }
 
 
