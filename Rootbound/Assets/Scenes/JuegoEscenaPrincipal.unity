@@ -11794,9 +11794,8 @@ GameObject:
   - component: {fileID: 366911836}
   - component: {fileID: 366911838}
   - component: {fileID: 366911837}
-  - component: {fileID: 366911839}
   m_Layer: 5
-  m_Name: PanelPausa
+  m_Name: ContenedorPausa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11861,19 +11860,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366911835}
   m_CullTransparentMesh: 1
---- !u!114 &366911839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 366911835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1961a0c7158515e4c8c03cdd72fd4f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelPausa: {fileID: 872261287}
 --- !u!1001 &367510663
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12800,9 +12786,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -277.77582
       objectReference: {fileID: 0}
+    - target: {fileID: 5724955004211290455, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5724955004211290455, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5757518127497382017, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5757518127497382017, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 61
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 5837154058001597535, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
       propertyPath: m_AnchorMax.y
@@ -12947,7 +12945,7 @@ PrefabInstance:
     - target: {fileID: 6970908594455910747, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1387304477}
     - target: {fileID: 6970908594455910747, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: MostrarArmas
@@ -13151,7 +13149,7 @@ PrefabInstance:
     - target: {fileID: 8561887539637982163, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1387304477}
     - target: {fileID: 8561887539637982163, guid: ed4db89470ecba942a49ca05e92332a0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: MostrarPociones
@@ -26479,7 +26477,7 @@ GameObject:
   - component: {fileID: 760329536}
   - component: {fileID: 760329535}
   m_Layer: 5
-  m_Name: renaudar
+  m_Name: BotonReanudar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26549,9 +26547,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1446398831}
+      - m_Target: {fileID: 1387304476}
         m_TargetAssemblyTypeName: GameManagerPausa, Assembly-CSharp
-        m_MethodName: Reanudar
+        m_MethodName: ReanudarJuego
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1387304476}
+        m_TargetAssemblyTypeName: GameManagerPausa, Assembly-CSharp
+        m_MethodName: SiClickeoElReanudar
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -30206,7 +30216,7 @@ GameObject:
   - component: {fileID: 872261289}
   - component: {fileID: 872261288}
   m_Layer: 5
-  m_Name: CnvaPausa
+  m_Name: MenuDePausa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42667,7 +42677,7 @@ GameObject:
   - component: {fileID: 1238159725}
   - component: {fileID: 1238159724}
   m_Layer: 5
-  m_Name: salir
+  m_Name: BotonSalir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42737,7 +42747,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1446398831}
+      - m_Target: {fileID: 1387304476}
         m_TargetAssemblyTypeName: GameManagerPausa, Assembly-CSharp
         m_MethodName: VolverAlMenu
         m_Mode: 1
@@ -46897,6 +46907,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tiendaObjetos: {fileID: 262692510}
+  MenuPausa: {fileID: 872261287}
+  scriptsADesactivar:
+  - {fileID: 1387304472}
+  - {fileID: 963194229}
   pocionHandler: {fileID: 368936871}
   armasHandler: {fileID: 368936873}
   invPocionesGENERAL: {fileID: 150887164}
@@ -48905,51 +48919,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5239272197777735519, guid: e348e7143b6247b488737e4be26fb038, type: 3}
   m_PrefabInstance: {fileID: 1444937830}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1446398828
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1446398830}
-  - component: {fileID: 1446398831}
-  m_Layer: 0
-  m_Name: GameManagerPausa
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1446398830
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446398828}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.18481, y: 1.81514, z: 29.19109}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1446398831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446398828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1961a0c7158515e4c8c03cdd72fd4f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelPausa: {fileID: 366911835}
 --- !u!1001 &1448315646
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -73444,7 +73413,6 @@ SceneRoots:
   - {fileID: 368936869}
   - {fileID: 864688167}
   - {fileID: 872261291}
-  - {fileID: 1446398830}
   - {fileID: 8374810987024329641}
   - {fileID: 2606252907077881474}
   - {fileID: 5027299789876352863}

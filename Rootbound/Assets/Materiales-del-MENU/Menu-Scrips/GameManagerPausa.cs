@@ -53,6 +53,12 @@ public class GameManagerPausa : MonoBehaviour
         SceneManager.LoadScene("InterfazMenu"); // carga la escena del menú principal
     }
 
+    public void SiClickeoElReanudar()
+    {
+        juegoPausado = !juegoPausado;
+    }
+
+
 }
 
 
