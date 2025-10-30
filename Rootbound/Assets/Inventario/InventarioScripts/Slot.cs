@@ -12,7 +12,7 @@ public class Slot : MonoBehaviour
     Sprite imageSlot;
 
     int indice = -1;
-    CategoriaDelSlotEnum categoria = CategoriaDelSlotEnum.IndefinidoSlot;
+    CategoriaDelSlotEnum categoria;
     public void InicializarSlot()
     {
         iconoDelSlot = GetComponent<Image>();
@@ -36,6 +36,8 @@ public class Slot : MonoBehaviour
         contadorPocion.fontSize = 55;
         contadorPocion.alignment = TextAnchor.MiddleCenter;
         contadorPocion.color = Color.white;
+        indice = -1;
+        categoria = CategoriaDelSlotEnum.IndefinidoSlot;
 
     }
 

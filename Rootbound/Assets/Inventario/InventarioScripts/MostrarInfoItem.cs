@@ -83,7 +83,7 @@ public class MostrarInfoItem : MonoBehaviour , IPointerClickHandler
             RarezaArma.text = itemConvertido.Rareza.ToString();
             return;
         }
-        else
+        else if (datoObtenido.GetCategoria() == CategoriaDelSlotEnum.PocionSlot)
         {
             LimpiarTexto(listaPocion);
             Item item = datoObtenido.GetItem();
