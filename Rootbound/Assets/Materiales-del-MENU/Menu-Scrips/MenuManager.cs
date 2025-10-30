@@ -33,7 +33,7 @@ public class MenuManager : MonoBehaviour
         if (!string.IsNullOrEmpty(nombreJugador))
         {
             GameData.Instance.SetPlayerName(nombreJugador);  // ✅ Guarda el nombre usando GameData
-            SceneManager.LoadScene("GameScene");            // ✅ Cambia a la escena del juego
+            SceneManager.LoadScene("JuegoEscenaPrincipal");            // ✅ Cambia a la escena del juego
         }
         else
         {
