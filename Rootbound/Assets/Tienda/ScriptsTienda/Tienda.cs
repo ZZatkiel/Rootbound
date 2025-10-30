@@ -251,10 +251,6 @@ public class Tienda : MonoBehaviour
 
     }
 
-    private void Start()
-    {
-        MostrarArmasEnUI();
-    }
 
     public List<Dictionary<string, object>> obtenerTresArmasRandom()
     {
