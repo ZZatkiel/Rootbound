@@ -1,56 +1,92 @@
 using UnityEngine;
-using System.Collections;
 
 public class HitboxAtaque : MonoBehaviour
 {
-    [Header("Par�metros de Ataque")]
+    [Header("Configuración de Daño")]
     public float dañoAtaque = 10f;
-    public float tiempoEntreAtaques = 1f; // Cooldown: 1 segundo
-    private bool puedeAtacar = true; // Control del cooldown
-    private PersecucionEnemigo scriptPrincipal;
+    public float tiempoEntreAtaques = 1f; // Cooldown de 1 segundo
+
+    // Bandera para controlar el tiempo entre ataques
+    private bool puedeAtacar = true;
+
+    [Header("Tags Objetivo")]
+    public string tagObjetivo1 = "Player";
+    public string tagObjetivo2 = "Arbol";
+
+    // Referencia al script de persecución en el objeto padre (el enemigo)
+    private PersecucionEnemigo persecucionScript;
 
     void Start()
     {
-        scriptPrincipal = GetComponentInParent<PersecucionEnemigo>();
-        if (scriptPrincipal == null)
+        persecucionScript = GetComponentInParent<PersecucionEnemigo>();
+        if (persecucionScript == null)
         {
-            Debug.LogError("HitboxAtaque requiere el script PersecucionEnemigo en el objeto padre.");
-        }
-
-        // Si el objeto 'HitboxAtaque' (o su Collider) est� deshabilitado por defecto, 
-        // �DEBE ESTAR HABILITADO AHORA! Si estuviera deshabilitado, OnTriggerStay nunca se llamar�a.
-        // Aseg�rate de que el GameObject 'HitboxAtaque' est� ACTIVO en el Editor.
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        // Solo verificamos si el objetivo es un Tag v�lido (Player o Arbol)
-        bool esJugador = other.CompareTag(scriptPrincipal.tagJugador);
-        bool esArbol = other.CompareTag(scriptPrincipal.tagArbol);
-
-        if ((esJugador || esArbol) && puedeAtacar)
-        {
-            // Ejecutar el ataque si es un objetivo y no est� en cooldown
-            StartCoroutine(CicloDeAtaque(other.gameObject));
+            Debug.LogError("HitboxAtaque no encontró PersecucionEnemigo en los padres.");
         }
     }
 
-    IEnumerator CicloDeAtaque(GameObject target)
+    // CAMBIO CLAVE: Usamos OnTriggerStay para detectar colisión continua
+    void OnTriggerStay(Collider other)
     {
-        puedeAtacar = false;
+        // 1. Verificación de lógica de ataque
+        if (!puedeAtacar || !EsObjetivoValido(other.gameObject))
+        {
+            return;
+        }
 
-        // --- 1. ACTIVACION Y EJECUCI�N DEL ATAQUE ---
+        // 2. Intentar obtener el script de Salud
+        Salud saludObjetivo = other.GetComponent<Salud>();
 
-        // LOG DE CONFIRMACION: Se ejecutar� cada 1s si el objetivo est� en rango.
-        Debug.Log($"---> [ATAQUE CORTADISTANCIA EJECUTADO] Objetivo: {target.name}. Daño: {dañoAtaque}. Inicio del golpe: {Time.time}");
+        if (saludObjetivo != null)
+        {
+            // --- INICIO DEL CICLO DE ATAQUE ---
 
-        // --- 2. COOLDOWN ---
-        yield return new WaitForSeconds(tiempoEntreAtaques);
+            // a) Aplicar daño instantáneo
+            saludObjetivo.RecibirDano(dañoAtaque);
+            Debug.Log(gameObject.transform.root.name + " golpeó a " + other.gameObject.name + " e hizo " + dañoAtaque + " de daño.");
 
-        // --- 3. FINALIZACI�N DEL ATAQUE ---
-        Debug.Log($"<--- [COOLDOWN FINALIZADO]. {target.name} puede ser atacado de nuevo.");
+            // b) Iniciar el Cooldown y la detención
+            puedeAtacar = false;
 
-        // Permitir el siguiente ataque
+            // Detener el movimiento mientras dura el cooldown
+            if (persecucionScript != null)
+            {
+                persecucionScript.SetAttacking(true);
+            }
+
+            // Programar la reactivación del ataque y el movimiento
+            Invoke("RestablecerAtaque", tiempoEntreAtaques);
+        }
+    }
+
+    // Usamos OnTriggerExit para asegurarnos de que el enemigo puede volver a moverse
+    // si el objetivo se aleja antes de que termine el cooldown.
+    void OnTriggerExit(Collider other)
+    {
+        if (EsObjetivoValido(other.gameObject) && persecucionScript != null)
+        {
+            // Si el objetivo se va, el enemigo debería dejar de estar en modo ataque
+            // para empezar a perseguir de nuevo (si puede).
+            persecucionScript.SetAttacking(false);
+        }
+    }
+
+    bool EsObjetivoValido(GameObject obj)
+    {
+        return obj.CompareTag(tagObjetivo1) ||
+               obj.CompareTag(tagObjetivo2);
+    }
+
+    void RestablecerAtaque()
+    {
         puedeAtacar = true;
+
+        // El script de persecución debe decidir si se mueve o se queda quieto
+        // Si el objetivo sigue dentro del trigger, OnTriggerStay llamará de nuevo al ataque
+        // en el siguiente frame (si el objetivo sigue ahí).
+        if (persecucionScript != null)
+        {
+            persecucionScript.SetAttacking(false);
+        }
     }
 }

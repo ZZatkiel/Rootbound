@@ -5,6 +5,10 @@ public class PersecucionEnemigo : MonoBehaviour
     [Header("Persecución")]
     public float velocidadMovimiento = 3.5f;
     public float rangoPersecucionArbol = 5f;
+    public float rangoPrioridadJugador = 8f;
+    // Factor de fuerza para la rotación y movimiento (mayor en rb no cinemático)
+    public float fuerzaRotacion = 10f;
+
     private Transform objetivoActual;
     private Rigidbody rb;
 
@@ -12,7 +16,9 @@ public class PersecucionEnemigo : MonoBehaviour
     public string tagJugador = "Player";
     public string tagArbol = "Arbol";
 
-    private bool estaEnColisionConJugador = false; // Bandera para gestionar el anti-empuje
+    // NUEVA BANDERA: Controlada por HitboxAtaque.cs
+    private bool estaAtacando = false;
+    private bool estaEnColisionConJugador = false;
 
     void Start()
     {
@@ -24,26 +30,44 @@ public class PersecucionEnemigo : MonoBehaviour
 
         if (rb != null)
         {
-            // Corrigiendo propiedades obsoletas y configurando anti-freno
-            rb.linearDamping = 0f;       // Reemplaza .drag
-            rb.angularDamping = 0.05f;   // Reemplaza .angularDrag
+            // Ajustamos el amortiguamiento a un valor bajo para que no frene el movimiento
+            rb.linearDamping = 0.5f; // Valor bajo, pero no cero, para mantener estabilidad.
+            rb.angularDamping = 0.5f;
         }
     }
+
+    // Llamada por HitboxAtaque.cs para detener/reanudar el movimiento.
+    public void SetAttacking(bool isAttacking)
+    {
+        estaAtacando = isAttacking;
+        // La lógica de detener la velocidad está en FixedUpdate()
+    }
+
 
     void FixedUpdate()
     {
         if (rb == null) return;
 
+        // Si está atacando, detener todo movimiento y salir
+        if (estaAtacando)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            return;
+        }
+
+        // --- LÓGICA DE PERSECUCIÓN ---
         BuscarObjetivo();
 
         if (objetivoActual != null)
         {
             PerseguirObjetivo(objetivoActual);
         }
-        // Aseguramos que el enemigo se detenga si no hay objetivo y no está colisionando.
         else if (!estaEnColisionConJugador)
         {
-            rb.linearVelocity = Vector3.zero; // Reemplaza .velocity
+            // Frena al enemigo si no hay objetivo.
+            // Si el drag es alto, esto no es estrictamente necesario, pero es seguro.
+            rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
     }
@@ -53,11 +77,11 @@ public class PersecucionEnemigo : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(tagJugador))
         {
-            Debug.Log("hola");
-            
             // Anulamos la velocidad para que el jugador no pueda empujar al enemigo.
-        }// El rb.MovePosition en PerseguirObjetivo lo moverá inmediatamente a la posición deseada.e;
-        
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            estaEnColisionConJugador = true;
+        }
     }
 
     void OnCollisionExit(Collision collision)
@@ -70,39 +94,57 @@ public class PersecucionEnemigo : MonoBehaviour
 
     void BuscarObjetivo()
     {
-        // 1. PRIORIDAD MÁXIMA: Jugador
+        objetivoActual = null;
         GameObject jugadorGO = GameObject.FindWithTag(tagJugador);
+        GameObject arbolGO = GameObject.FindWithTag(tagArbol);
+
+        float distanciaJugador = float.MaxValue;
+        float distanciaArbol = float.MaxValue;
+
         if (jugadorGO != null)
+        {
+            distanciaJugador = Vector3.Distance(transform.position, jugadorGO.transform.position);
+        }
+        if (arbolGO != null)
+        {
+            distanciaArbol = Vector3.Distance(transform.position, arbolGO.transform.position);
+        }
+
+        // PRIORIDAD 1: Jugador cerca (prioridad absoluta)
+        if (jugadorGO != null && distanciaJugador <= rangoPrioridadJugador)
         {
             objetivoActual = jugadorGO.transform;
             return;
         }
 
-        // 2. PRIORIDAD SECUNDARIA: Árbol (solo si está dentro del rango)
-        GameObject arbolGO = GameObject.FindWithTag(tagArbol);
+        // PRIORIDAD 2: Jugador lejos o no disponible. Perseguir al más cercano dentro de rango.
+        bool arbolEsAccesible = arbolGO != null && distanciaArbol <= rangoPersecucionArbol;
+        bool jugadorEsAccesible = jugadorGO != null;
 
-        if (arbolGO != null)
+        if (arbolEsAccesible && jugadorEsAccesible)
         {
-            float distanciaArbol = Vector3.Distance(transform.position, arbolGO.transform.position);
-
-            if (distanciaArbol <= rangoPersecucionArbol)
-            {
-                objetivoActual = arbolGO.transform;
-                return;
-            }
+            objetivoActual = (distanciaJugador < distanciaArbol) ? jugadorGO.transform : arbolGO.transform;
         }
-        objetivoActual = null;
+        else if (arbolEsAccesible)
+        {
+            objetivoActual = arbolGO.transform;
+        }
+        else if (jugadorEsAccesible)
+        {
+            objetivoActual = jugadorGO.transform;
+        }
     }
 
     void PerseguirObjetivo(Transform objetivo)
     {
         Vector3 direccion = (objetivo.position - transform.position).normalized;
 
+        // Rotación
         Quaternion rotacionObjetivo = Quaternion.LookRotation(direccion);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, Time.fixedDeltaTime * 10f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, Time.fixedDeltaTime * fuerzaRotacion);
 
-        // Movimiento físico/cinético usando Rigidbody.MovePosition
-        Vector3 nuevaPosicion = rb.position + direccion * velocidadMovimiento * Time.fixedDeltaTime;
-        rb.MovePosition(nuevaPosicion);
+        // --- CAMBIO CLAVE: Usamos linearVelocity para movimiento no cinemático ---
+        // Esto le da control físico al Rigidbody.
+        rb.linearVelocity = direccion * velocidadMovimiento;
     }
 }
