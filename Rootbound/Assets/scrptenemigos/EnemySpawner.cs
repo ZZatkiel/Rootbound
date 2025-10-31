@@ -1,14 +1,21 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject[] enemyPrefabs;
-    public float spawnInterval = 3f; // Un enemigo spawnea cada 3 segundos.
+    [Header("Configuraci√≥n de Plantilla")]
+    // Usaremos esta referencia solo para crear la plantilla oculta en Start()
+    public GameObject enemyPrefabBase;
 
-    [Header("ConfiguraciÛn de Ciclo")]
-    private const int MAX_ENEMIES_CREATED = 20; // LÌmite de enemigos por oleada
-    private const float BREAK_DURATION = 30f;   // DuraciÛn del descanso en segundos
+    // El objeto que NUNCA se destruye y sirve como plantilla de clonaci√≥n
+    private GameObject permanentEnemyTemplate;
+
+    [Header("Spawn y Ciclo")]
+    public float spawnInterval = 3f;
+
+    // Configuraci√≥n de Ciclo (sin cambios)
+    private const int MAX_ENEMIES_CREATED = 20;
+    private const float BREAK_DURATION = 30f;
 
     // Variables de estado
     private int enemiesCreatedInCycle = 0;
@@ -19,21 +26,34 @@ public class EnemySpawner : MonoBehaviour
     private bool isSpawning = true;
     private bool isBreakActive = false;
     private bool secondWaveCompleted = false;
+    private bool spawnDetenidoPorMuerte = false;
 
     private float breakTimer = BREAK_DURATION;
-
-    // Lista para almacenar los puntos de spawn encontrados (Norte, Sur, Este, Oeste)
     private List<Transform> spawnPointsList;
 
     void Start()
     {
+        // 1. CREAR LA PLANTILLA PERMANENTE DEBAJO DEL MAPA
+        if (enemyPrefabBase != null)
+        {
+            // Creamos la plantilla muy por debajo del mapa (-1000) y la deshabilitamos.
+            permanentEnemyTemplate = Instantiate(enemyPrefabBase, new Vector3(0, -1000f, 0), Quaternion.identity);
+            permanentEnemyTemplate.name = "Enemy Template (DO NOT DESTROY)";
+            permanentEnemyTemplate.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("El Prefab Base del enemigo es nulo. Asignar un Prefab en el Inspector.");
+            isSpawning = false;
+        }
+
         FindNamedSpawnPoints();
-        // El ciclo comienza en la Oleada 1
-        Debug.Log("--- INICIO ---: Spawner activado en Oleada 1 (M·x. 20 enemigos).");
+        Debug.Log("--- INICIO ---: Spawner activado en Oleada 1 (M√°x. 20 enemigos).");
     }
 
     void FindNamedSpawnPoints()
     {
+        // ... (Tu l√≥gica de b√∫squeda de puntos de spawn, sin cambios)
         spawnPointsList = new List<Transform>();
         string[] spawnNames = { "norte", "sur", "este", "oeste" };
 
@@ -48,15 +68,20 @@ public class EnemySpawner : MonoBehaviour
 
         if (spawnPointsList.Count == 0)
         {
-            Debug.LogError("No se encontraron puntos de spawn (Norte, Sur, Este, Oeste). El spawner no funcionar·.");
-            isSpawning = false; // Detener el spawn si no hay puntos
+            Debug.LogError("No se encontraron puntos de spawn. El spawner no funcionar√°.");
+            isSpawning = false;
         }
     }
 
     void Update()
     {
-        // Si la Oleada 2 ha terminado, el spawner no hace nada
-        if (secondWaveCompleted) return;
+        // ... (Tu l√≥gica de ciclos y verificaci√≥n de objetivos, sin cambios)
+        if (!spawnDetenidoPorMuerte)
+        {
+            VerificarEstadoDeObjetivos();
+        }
+
+        if (secondWaveCompleted || spawnDetenidoPorMuerte) return;
 
         if (isBreakActive)
         {
@@ -68,36 +93,71 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    void VerificarEstadoDeObjetivos()
+    {
+        GameObject jugadorGO = GameObject.FindWithTag("Player");
+        GameObject arbolGO = GameObject.FindWithTag("Arbol");
+
+        // REGLA: Si el √Årbol muere, el Player tambi√©n pierde
+        if (arbolGO == null)
+        {
+            Debug.LogWarning("--- GAME OVER ---: ¬°El √Årbol ha sido destruido! Deteniendo Spawner.");
+            DetenerSpawnPermanentemente();
+
+            if (jugadorGO != null)
+            {
+                Salud saludJugador = jugadorGO.GetComponent<Salud>();
+                if (saludJugador != null)
+                {
+                    saludJugador.Morir();
+                }
+                else
+                {
+                    Destroy(jugadorGO);
+                }
+            }
+            return;
+        }
+
+        if (jugadorGO == null)
+        {
+            Debug.LogWarning("--- GAME OVER ---: El Jugador ha sido destruido. Deteniendo Spawner.");
+            DetenerSpawnPermanentemente();
+            return;
+        }
+    }
+
+    void DetenerSpawnPermanentemente()
+    {
+        isSpawning = false;
+        isBreakActive = false;
+        spawnDetenidoPorMuerte = true;
+    }
+
     void HandleSpawnTimer()
     {
-        // Controlar el temporizador de spawn (1 enemigo cada 3 segundos)
         timer += Time.deltaTime;
 
         if (timer >= spawnInterval)
         {
             SpawnSingleEnemy();
-            timer = 0f; // Resetear el temporizador
+            timer = 0f;
 
-            // 1. Verificar el lÌmite de creaciÛn de enemigos
             if (enemiesCreatedInCycle >= MAX_ENEMIES_CREATED)
             {
                 if (waveNumber == 1)
                 {
-                    // TransiciÛn a la FASE DE DESCANSO
                     isSpawning = false;
                     isBreakActive = true;
-                    waveNumber = 2; // Preparar para la Oleada 2
-                    breakTimer = BREAK_DURATION; // Reiniciar el temporizador de descanso
-
-                    // DEBUG: Aviso de inicio de temporizador
-                    Debug.Log($"CONTADOR LLEG” A {MAX_ENEMIES_CREATED}. INICIANDO TEMPORIZADOR DE DESCANSO DE {BREAK_DURATION} SEGUNDOS.");
+                    waveNumber = 2;
+                    breakTimer = BREAK_DURATION;
+                    Debug.Log($"CONTADOR LLEG√ì A {MAX_ENEMIES_CREATED}. INICIANDO TEMPORIZADOR DE DESCANSO DE {BREAK_DURATION} SEGUNDOS.");
                 }
                 else if (waveNumber == 2)
                 {
-                    // FIN PERMANENTE: La Oleada 2 ha terminado su cuota de 20
                     isSpawning = false;
                     secondWaveCompleted = true;
-                    Debug.Log("--- FIN DEL SPAWN ---: La Oleada 2 ha completado su lÌmite de 20. Spawning detenido permanentemente.");
+                    Debug.Log("--- FIN DEL SPAWN ---: La Oleada 2 ha completado su l√≠mite de 20. Spawning detenido permanentemente.");
                 }
             }
         }
@@ -106,43 +166,37 @@ public class EnemySpawner : MonoBehaviour
     void HandleBreakTimer()
     {
         breakTimer -= Time.deltaTime;
-
-        // DEBUG: Aviso del tiempo restante
         Debug.Log($"Temporizador de Descanaso: {Mathf.CeilToInt(breakTimer)} segundos restantes.");
 
         if (breakTimer <= 0f)
         {
-            // TransiciÛn a la OLEADA 2
             isBreakActive = false;
             isSpawning = true;
-            enemiesCreatedInCycle = 0; // Contador de creaciÛn vuelve a 0
+            enemiesCreatedInCycle = 0;
             timer = 0f;
-            Debug.Log("--- FIN DEL DESCANSO ---: Iniciando Oleada 2 (M·x. 20 enemigos). El contador vuelve a 0.");
+            Debug.Log("--- FIN DEL DESCANSO ---: Iniciando Oleada 2 (M√°x. 20 enemigos). El contador vuelve a 0.");
         }
     }
 
+    // --- L√ìGICA DE SPAWN SIMPLE (CLONAR PLANTILLA OCULTA) ---
     void SpawnSingleEnemy()
     {
-        // Verificaciones de seguridad
-        if (spawnPointsList.Count == 0 || enemyPrefabs.Length == 0) return;
+        if (spawnPointsList.Count == 0 || permanentEnemyTemplate == null) return;
 
-        // Spawnea UN solo enemigo de forma aleatoria en uno de los 4 puntos
-        int randomIndex = Random.Range(0, enemyPrefabs.Length);
         Vector3 spawnPosition = GetRandomSpawnPoint();
-        GameObject enemy = Instantiate(enemyPrefabs[randomIndex], spawnPosition, Quaternion.identity);
 
-        // LÛgica de AsignaciÛn de Target (si es necesaria)
-        GameObject arbolGO = GameObject.Find("Arbol");
-        if (arbolGO != null)
+        // 1. Clonar la plantilla oculta y crear un enemigo activo
+        GameObject newEnemy = Instantiate(permanentEnemyTemplate, spawnPosition, Quaternion.identity);
+
+        // 2. Asegurarse de que el nuevo enemigo est√© activo para el juego
+        if (!newEnemy.activeSelf)
         {
-            EnemyBehavior enemyBehavior = enemy.GetComponent<EnemyBehavior>();
-            if (enemyBehavior != null)
-            {
-                enemyBehavior.target = arbolGO.transform;
-            }
+            newEnemy.SetActive(true);
         }
 
-        // Incrementar el contador
+        // 3. (Opcional) Renombrar para debug
+        newEnemy.name = "Enemy Spawned " + enemiesCreatedInCycle;
+
         enemiesCreatedInCycle++;
         Debug.Log($"Enemigo creado. Total en ciclo (Oleada {waveNumber}): {enemiesCreatedInCycle} / {MAX_ENEMIES_CREATED}");
     }
