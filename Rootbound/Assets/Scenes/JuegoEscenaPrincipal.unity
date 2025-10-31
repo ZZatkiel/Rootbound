@@ -3695,7 +3695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &108798548
 Transform:
   m_ObjectHideFlags: 0
@@ -3725,6 +3725,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   "da\xF1oAtaque": 10
   tiempoEntreAtaques: 1
+  tagObjetivo1: Player
+  tagObjetivo2: Arbol
 --- !u!65 &108798550
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3742,7 +3744,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.1549182, y: 1.2324191, z: 1.4231143}
   m_Center: {x: 0.0774591, y: 0.11620957, z: 0.07802665}
@@ -14115,6 +14117,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5239272197777735519, guid: e348e7143b6247b488737e4be26fb038, type: 3}
   m_PrefabInstance: {fileID: 387366231}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &387522079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 387522080}
+  m_Layer: 0
+  m_Name: HitboxPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &387522080
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387522079}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2030071378}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &388147431
 GameObject:
   m_ObjectHideFlags: 0
@@ -45949,7 +45982,7 @@ Transform:
   m_GameObject: {fileID: 1352475809}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.78, z: 0.076}
+  m_LocalPosition: {x: 16.2, y: 0.78, z: 0.076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -46044,6 +46077,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidadMovimiento: 3.5
   rangoPersecucionArbol: 5
+  rangoPrioridadJugador: 8
+  fuerzaRotacion: 10
   tagJugador: Player
   tagArbol: Arbol
 --- !u!114 &1352475818
@@ -47161,7 +47196,6 @@ GameObject:
   - component: {fileID: 1387304475}
   - component: {fileID: 1387304479}
   - component: {fileID: 1387304481}
-  - component: {fileID: 1387304482}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -47316,7 +47350,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
@@ -47333,18 +47367,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saludMaxima: 100
---- !u!114 &1387304482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1387304471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5734fdf7ae8b2e640b892b5ddf47afec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1395717627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -70075,7 +70097,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 387522080}
   m_Father: {fileID: 1387304474}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2030071380
