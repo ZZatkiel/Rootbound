@@ -14126,6 +14126,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 387522080}
+  - component: {fileID: 387522082}
+  - component: {fileID: 387522081}
   m_Layer: 0
   m_Name: HitboxPlayer
   m_TagString: Untagged
@@ -14148,6 +14150,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2030071378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &387522081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387522079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4fd130d4d0e7d46b564c686b9ed7db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radioAtaque: 3
+  danioAtaque: 100
+  teclaAtaque: 113
+  cooldownAtaque: 1
+  tagEnemigo: Enemy
+--- !u!65 &387522082
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387522079}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.24996, y: 1.2453852, z: 2.139341}
+  m_Center: {x: -0.019797325, y: 0.122692585, z: -0.00058591366}
 --- !u!1 &388147431
 GameObject:
   m_ObjectHideFlags: 0
@@ -45968,7 +46008,7 @@ GameObject:
   - component: {fileID: 1352475819}
   m_Layer: 0
   m_Name: CortaDistancia
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45982,7 +46022,7 @@ Transform:
   m_GameObject: {fileID: 1352475809}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.2, y: 0.78, z: 0.076}
+  m_LocalPosition: {x: 27.14, y: 0.78, z: 0.076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -46093,7 +46133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9fd2ee82fe2ceb4bb9b7a2b6e6db6bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saludMaxima: 100
+  vidaMaxima: 100
+  vidaActual: 0
 --- !u!54 &1352475819
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -47350,7 +47391,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
@@ -47366,7 +47407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9fd2ee82fe2ceb4bb9b7a2b6e6db6bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saludMaxima: 100
+  vidaMaxima: 100
+  vidaActual: 0
 --- !u!1001 &1395717627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67306,7 +67348,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9fd2ee82fe2ceb4bb9b7a2b6e6db6bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saludMaxima: 100
+  vidaMaxima: 100
+  vidaActual: 0
 --- !u!1001 &1929611904
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71230,6 +71273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2068725722}
   - component: {fileID: 2068725721}
+  - component: {fileID: 2068725723}
   m_Layer: 0
   m_Name: EnemySpawner
   m_TagString: Untagged
@@ -71249,10 +71293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e93b04da8a31d4480a783eca9db392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefabs:
-  - {fileID: 1352475809}
-  - {fileID: 1352475809}
-  - {fileID: 1352475809}
+  enemyPrefabBase: {fileID: 1352475809}
   spawnInterval: 3
 --- !u!4 &2068725722
 Transform:
@@ -71273,6 +71314,19 @@ Transform:
   - {fileID: 440750346}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2068725723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068725720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5525657c543733e4fb7c49961f2c7755, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShouldDisableInsteadOfDestroy: 0
 --- !u!1 &2069214392
 GameObject:
   m_ObjectHideFlags: 0
