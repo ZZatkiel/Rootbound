@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameManagerPausa : MonoBehaviour
 {
     public GameObject panelPausa;
+    public GameObject panelPerdido;
     public GameObject inventario;
     private bool juegoPausado = false;
 
@@ -14,6 +15,10 @@ public class GameManagerPausa : MonoBehaviour
         if (inventario != null && inventario.activeSelf)
             return;
 
+        if (panelPerdido != null && panelPerdido.activeSelf)
+        {
+            return;
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {

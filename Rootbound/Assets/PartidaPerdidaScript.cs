@@ -1,16 +1,23 @@
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class PartidaPerdidaScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+
+
+
+
+    public void ReiniciarPartida()
     {
-        
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("JuegoEscenaPrincipal"); 
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void VolverAlMenu()
     {
-        
+        SceneManager.LoadScene("InterfazMenu");
+
     }
+
 }

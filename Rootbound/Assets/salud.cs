@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Salud : MonoBehaviour
 {
     public float vidaMaxima = 100f;
     public float vidaActual;
+    public GameObject manejadorDerrota;
 
     void Start()
     {
@@ -25,10 +27,24 @@ public class Salud : MonoBehaviour
     // El objeto se DESTRUYE al morir.
     public void Morir()
     {
-        // Lógica de efectos de muerte (animación, partículas, etc.)
+        // Lï¿½gica de efectos de muerte (animaciï¿½n, partï¿½culas, etc.)
 
-        // Destrucción final del objeto
-        Destroy(gameObject);
-        Debug.Log(gameObject.name + " ha sido destruido.");
+        if (transform.parent != null && transform.parent.name == "Jugadores")
+        {
+            Time.timeScale = 0f;
+
+            // desbloquear y mostrar cursor para poder clicar en la UI
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            manejadorDerrota.SetActive(true);
+
+        }
+        else
+        {
+            Destroy(gameObject);
+
+        }
     }
+
 }
