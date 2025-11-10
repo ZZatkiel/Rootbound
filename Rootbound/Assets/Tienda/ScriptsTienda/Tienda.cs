@@ -28,6 +28,7 @@ public class Tienda : MonoBehaviour
 
     }
 
+
     private void Awake()
     {
         items = new List<Dictionary<string, object>>()
