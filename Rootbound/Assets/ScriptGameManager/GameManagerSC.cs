@@ -7,6 +7,7 @@ public class GameManagerSC : MonoBehaviour
     private static GameManagerSC instancia;
     public ScoreManager scoreManager;
     public AudioManager audioManager;
+    public RoundManager roundManager;
 
     static public GameManagerSC Instancia
     {
@@ -28,6 +29,7 @@ public class GameManagerSC : MonoBehaviour
         DontDestroyOnLoad(gameObject); //Hace que no se destruya cuando cambie la escena
         scoreManager = new ScoreManager(0);
         audioManager = new AudioManager(gameObject);
+        roundManager = new RoundManager(1); 
     }
 
 }
