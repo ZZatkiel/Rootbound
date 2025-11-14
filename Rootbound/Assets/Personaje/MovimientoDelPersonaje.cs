@@ -22,12 +22,24 @@ public class MovimientoDelPersonaje : MonoBehaviour
     private Vector3 velocidadVertical;
     private bool estaEnSuelo;
 
+    Vector3 pushVector = Vector3.zero;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
 
         if (camTransform == null && Camera.main != null)
             camTransform = Camera.main.transform;
+    }
+
+    void FixedUpdate()
+    {
+        if (pushVector != Vector3.zero)
+        {
+            // Aplicamos el empuje en FixedUpdate
+            controller.Move(pushVector * Time.fixedDeltaTime);
+            pushVector = Vector3.zero; // Reseteamos
+        }
     }
 
     void Update()

@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31958e1c2bae7374bb0f8ace7be38ec8, type: 3}
   m_Name: Mutante
   m_EditorClassIdentifier: 
-  nombre: 
+  nombre: mutante
+  vida: 100
   tipoDeEnemigo: 2
-  "da\xF1o": 0
-  velocidad: 0
-  velocidadAtaque: 0
-  modelo: {fileID: 0}
+  "da\xF1o": 100
+  velocidadMovimiento: 10
+  velocidadAtaque: 100
+  modelo: {fileID: 4393812605529384480, guid: 04964d2ddba8d5449b80f5c990551a20, type: 3}

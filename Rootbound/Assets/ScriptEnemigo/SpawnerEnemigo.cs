@@ -28,4 +28,13 @@ public class SpawnerEnemigo : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        SpawnerEnemigoRandom();
+        SpawnerEnemigoRandom();
+        SpawnerEnemigoRandom();
+
+    }
+
+
 }

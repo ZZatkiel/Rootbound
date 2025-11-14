@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Arbol
   - Enemy
+  - HitboxPlayer
+  - HitboxArbol
   layers:
   - Default
   - TransparentFX
