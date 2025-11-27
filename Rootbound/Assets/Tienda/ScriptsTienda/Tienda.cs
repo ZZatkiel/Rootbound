@@ -5,288 +5,153 @@ using UnityEngine.UI;
 
 public class Tienda : MonoBehaviour
 {
-    List<Dictionary<string, object>> items;
-
     public GameObject panelTienda;
     public GameObject objetoComprable1;
     public GameObject objetoComprable2;
     public GameObject objetoComprable3;
     public Text TextoDeRecarga;
-    public int valorDeRecarga;
+    public int valorDeRecarga = 10;
+    public bool tiendaEnabled;
 
     GameObject[] listObjetosComprables;
+
+    [Header("Armas (ScriptableObjects)")]
+    public List<InformacionArma> armasDisponibles = new List<InformacionArma>();
+
+    [Header("Pociones (ScriptableObjects)")]
+    public List<InformacionPocion> pocionesDisponibles = new List<InformacionPocion>();
+
+    public MonoBehaviour[] scriptsADesactivar;
+
+
+    public enum ShopItemType { Arma, Pocion }
+    [Serializable]
+    public class ShopEntry
+    {
+        public ShopItemType tipo;
+        public InformacionArma armaSO;     // si tipo == Arma
+        public InformacionPocion pocionSO; // si tipo == Pocion
+
+        public string Nombre
+        {
+            get
+            {
+                if (tipo == ShopItemType.Arma && armaSO != null) return armaSO.nombre;
+                if (tipo == ShopItemType.Pocion && pocionSO != null) return pocionSO.nombre;
+                return "Desconocido";
+            }
+        }
+
+        public string Descripcion
+        {
+            get
+            {
+                if (tipo == ShopItemType.Arma && armaSO != null) return armaSO.descripcion;
+                if (tipo == ShopItemType.Pocion && pocionSO != null) return pocionSO.descripcion;
+                return "";
+            }
+        }
+
+        public int Precio
+        {
+            get
+            {
+                if (tipo == ShopItemType.Arma && armaSO != null) return armaSO.precio;
+                if (tipo == ShopItemType.Pocion && pocionSO != null) return pocionSO.precio;
+                return 0;
+            }
+        }
+    }
+
+    private List<ShopEntry> itemsPool;
+
+    private void Awake()
+    {
+        BuildItemsPool();
+    }
 
     private void OnEnable()
     {
         TextoDeRecarga.text = valorDeRecarga.ToString();
     }
 
-
     private void OnDisable()
     {
         valorDeRecarga = 10;
-
     }
 
-
-    private void Awake()
+    private void BuildItemsPool()
     {
-        items = new List<Dictionary<string, object>>()
-{
-    // ESPADA 1 - Común
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Espada de Madera"},
-        {"descripcion", "Pequeña espada que sirve para principiantes"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 15f},
-        {"velocidadAtaque", 5f},
-        {"critico", 5f},
-        {"rareza", RarezaArmas.Comun},
-        {"precio", 20}
-    },
+        itemsPool = new List<ShopEntry>();
 
-    // ESPADA 2 - Común
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Espada de Hierro"},
-        {"descripcion", "Una espada simple pero resistente, ideal para aventureros novatos"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 25f},
-        {"velocidadAtaque", 6f},
-        {"critico", 7f},
-        {"rareza", RarezaArmas.Comun},
-        {"precio", 45}
-    },
-
-    // ESPADA 3 - Rara
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Espada del Alba"},
-        {"descripcion", "Brilla con la luz del amanecer, otorgando precisión y poder"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 40f},
-        {"velocidadAtaque", 6f},
-        {"critico", 10f},
-        {"rareza", RarezaArmas.Raro},
-        {"precio", 120}
-    },
-
-    // ESPADA 4 - Rara
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Espada Carmesí"},
-        {"descripcion", "Forjada con el fuego de un volcán, su filo arde con furia"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 50f},
-        {"velocidadAtaque", 5f},
-        {"critico", 12f},
-        {"rareza", RarezaArmas.Raro},
-        {"precio", 150}
-    },
-
-    // ESPADA 5 - Épica
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Hoja del Dragón"},
-        {"descripcion", "Creada con escamas de dragón, otorga un poder devastador"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 70f},
-        {"velocidadAtaque", 7f},
-        {"critico", 15f},
-        {"rareza", RarezaArmas.Epico},
-        {"precio", 300}
-    },
-
-    // ESPADA 6 - Épica
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Espada del Vacío"},
-        {"descripcion", "Su filo corta incluso la esencia del alma"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 80f},
-        {"velocidadAtaque", 6f},
-        {"critico", 18f},
-        {"rareza", RarezaArmas.Epico},
-        {"precio", 350}
-    },
-
-    // ESPADA 7 - Legendaria
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Excalibur"},
-        {"descripcion", "La espada mítica del rey, símbolo de justicia y poder absoluto"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 100f},
-        {"velocidadAtaque", 7f},
-        {"critico", 20f},
-        {"rareza", RarezaArmas.Legendario},
-        {"precio", 500}
-    },
-
-    // ESPADA 8 - Legendaria
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Filo del Infinito"},
-        {"descripcion", "Una espada que se alimenta de las almas caídas, incrementando su poder"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 120f},
-        {"velocidadAtaque", 8f},
-        {"critico", 25f},
-        {"rareza", RarezaArmas.Legendario},
-        {"precio", 700}
-    },
-
-    // ESPADA 9 - Común
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Espada de Bronce"},
-        {"descripcion", "Pesada y rudimentaria, pero confiable"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 20f},
-        {"velocidadAtaque", 5f},
-        {"critico", 6f},
-        {"rareza", RarezaArmas.Comun},
-        {"precio", 35}
-    },
-
-    // ESPADA 10 - Rara
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Espada del Relámpago"},
-        {"descripcion", "Canaliza energía eléctrica para ataques veloces"},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Arma},
-        {"daño", 55f},
-        {"velocidadAtaque", 8f},
-        {"critico", 14f},
-        {"rareza", RarezaArmas.Raro},
-        {"precio", 200}
-    },
-
-    // POCIÓN 1
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Poción de Daño"},
-        {"descripcion", "Aumenta temporalmente el daño de tus ataques"},
-        {"precio", 75},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Pocion},
-        {"duracion", 15},
-        {"cantidad", 1}
-    },
-
-    // POCIÓN 2
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Poción de Velocidad"},
-        {"descripcion", "Incrementa tu velocidad de ataque y movimiento"},
-        {"precio", 90},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Pocion},
-        {"duracion", 20},
-        {"cantidad", 1}
-    },
-
-    // POCIÓN 3
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Poción de Regeneración"},
-        {"descripcion", "Regenera lentamente tu salud durante un tiempo"},
-        {"precio", 100},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Pocion},
-        {"duracion", 25},
-        {"cantidad", 1}
-    },
-
-    // POCIÓN 4
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Poción de Defensa"},
-        {"descripcion", "Refuerza temporalmente tu resistencia al daño"},
-        {"precio", 85},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Pocion},
-        {"duracion", 20},
-        {"cantidad", 1}
-    },
-
-    // POCIÓN 5
-    new Dictionary<string, object>()
-    {
-        {"nombre", "Poción de Energía"},
-        {"descripcion", "Restaura parte de tu energía o maná"},
-        {"precio", 70},
-        {"modelo", null},
-        {"imagenInventario", null},
-        {"categoriaItem", CategoriaItemEnum.Pocion},
-        {"duracion", 2},
-        {"cantidad", 1}
-    }
-};
-
-
-    }
-
-
-    public List<Dictionary<string, object>> obtenerTresArmasRandom()
-    {
-        List<Dictionary<string, object>> copiaItems = new List<Dictionary<string, object>>(items);
-        List<Dictionary<string, object>> seleccion = new List<Dictionary<string, object>>();
-
-        for (int i = 0; i < 3 && copiaItems.Count > 0; i++)
+        foreach (var arma in armasDisponibles)
         {
-            int index = UnityEngine.Random.Range(0, copiaItems.Count);
-            seleccion.Add(copiaItems[index]);
-            copiaItems.RemoveAt(index);
+            if (arma == null) continue;
+            itemsPool.Add(new ShopEntry { tipo = ShopItemType.Arma, armaSO = arma });
+        }
+
+        foreach (var poc in pocionesDisponibles)
+        {
+            if (poc == null) continue;
+            itemsPool.Add(new ShopEntry { tipo = ShopItemType.Pocion, pocionSO = poc });
+        }
+    }
+
+    public List<ShopEntry> ObtenerTresRandom()
+    {
+        if (itemsPool == null || itemsPool.Count == 0) BuildItemsPool();
+
+        List<ShopEntry> copia = new List<ShopEntry>(itemsPool);
+        List<ShopEntry> seleccion = new List<ShopEntry>();
+
+        for (int i = 0; i < 3 && copia.Count > 0; i++)
+        {
+            int index = UnityEngine.Random.Range(0, copia.Count);
+            seleccion.Add(copia[index]);
+            copia.RemoveAt(index);
         }
 
         return seleccion;
     }
+
     public void MostrarArmasEnUI()
     {
         panelTienda.SetActive(true);
-        List<Dictionary<string, object>> armasSeleccionadas = obtenerTresArmasRandom();
+        tiendaEnabled = true;
+        Time.timeScale = 0f;
+
+        // Activar/desactivar scripts de movimiento/cámara
+        foreach (var script in scriptsADesactivar)
+        {
+            script.enabled = false;
+        }
+
+        // Mostrar u ocultar cursor
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+
+        List<ShopEntry> seleccion = ObtenerTresRandom();
         listObjetosComprables = new GameObject[3] { objetoComprable1, objetoComprable2, objetoComprable3 };
 
-        for (int i = 0; i < armasSeleccionadas.Count; i++)
+        for (int i = 0; i < listObjetosComprables.Length; i++)
+            if (listObjetosComprables[i] != null) listObjetosComprables[i].SetActive(false);
+
+        for (int i = 0; i < seleccion.Count; i++)
         {
-            Dictionary<string, object> item = armasSeleccionadas[i];
-            GameObject contenedorDeDatosComprables = listObjetosComprables[i];
-            contenedorDeDatosComprables.SetActive(true);
+            ShopEntry entry = seleccion[i];
+            GameObject contenedor = listObjetosComprables[i];
+            contenedor.SetActive(true);
 
-            listObjetosComprables[i].transform.Find("NombreDelObjeto").GetComponent<Text>().text = item["nombre"].ToString();
-            listObjetosComprables[i].transform.Find("DescripcionDelObjeto").GetComponent<Text>().text = item["descripcion"].ToString();
-            listObjetosComprables[i].transform.Find("PrecioDelObjeto").GetComponent<Text>().text = item["precio"].ToString();
+            contenedor.transform.Find("NombreDelObjeto").GetComponent<Text>().text = entry.Nombre;
+            contenedor.transform.Find("DescripcionDelObjeto").GetComponent<Text>().text = entry.Descripcion;
+            contenedor.transform.Find("PrecioDelObjeto").GetComponent<Text>().text = entry.Precio.ToString();
 
-            Button botonCompra = listObjetosComprables[i].transform.Find("BotonTienda").GetComponent<Button>();
-
+            Button botonCompra = contenedor.transform.Find("BotonTienda").GetComponent<Button>();
             botonCompra.onClick.RemoveAllListeners();
-            botonCompra.onClick.AddListener(() => Comprar(item, contenedorDeDatosComprables));
+
+            ShopEntry captured = entry;
+            botonCompra.onClick.AddListener(() => Comprar(captured, contenedor));
         }
     }
 
@@ -295,69 +160,80 @@ public class Tienda : MonoBehaviour
         if (GameManagerSC.Instancia.scoreManager.obtenerPuntos() >= valorDeRecarga)
         {
             MostrarArmasEnUI();
-            valorDeRecarga *= 2;
             GameManagerSC.Instancia.scoreManager.modificarPuntos(-valorDeRecarga);
-            Debug.Log($"Puntos restantes {GameManagerSC.Instancia.scoreManager.obtenerPuntos()}");
+            valorDeRecarga *= 2;
             TextoDeRecarga.text = valorDeRecarga.ToString();
+        }
+        else
+        {
+            Debug.Log("No tenes suficientes puntos para recargar.");
         }
     }
 
-    public void Comprar(Dictionary<string, object> item, GameObject contenedorDeDatosComprables)
+    public void Comprar(ShopEntry entry, GameObject contenedorDeDatosComprables)
     {
-        int precio = Convert.ToInt32(item["precio"]);
+        int precio = entry.Precio;
 
         if (GameManagerSC.Instancia.scoreManager.obtenerPuntos() >= precio)
         {
-            Debug.Log($"Comprado {item["nombre"].ToString()}");
+            Debug.Log($"Comprado {entry.Nombre}");
             GameManagerSC.Instancia.scoreManager.modificarPuntos(-precio);
-            Debug.Log($"Puntos restantes {GameManagerSC.Instancia.scoreManager.obtenerPuntos()}");
             contenedorDeDatosComprables.SetActive(false);
 
-
-            if ((CategoriaItemEnum)item["categoriaItem"] == CategoriaItemEnum.Arma)
+            if (entry.tipo == ShopItemType.Arma && entry.armaSO != null)
             {
-                string nombre = (string)item["nombre"];
-                string descripcion = (string)item["descripcion"];
-                GameObject modelo = (GameObject)item["modelo"];
-                Sprite imagenInventario = (Sprite)item["imagenInventario"];
-                CategoriaItemEnum categoriaItem = (CategoriaItemEnum)item["categoriaItem"];
-                float daño = (float)item["daño"];
-                float velocidadAtaque = (float)item["velocidadAtaque"];
-                float critico = (float)item["critico"];
-                RarezaArmas rareza = (RarezaArmas)item["rareza"];
-
-                Arma armaNueva = new Arma(nombre,descripcion,modelo,imagenInventario,categoriaItem,daño,velocidadAtaque ,critico ,rareza);
-
+                // Crear Arma (como antes)
+                Arma armaNueva = new Arma(
+                    entry.armaSO.nombre,
+                    entry.armaSO.descripcion,
+                    entry.armaSO.prefabModelo,
+                    entry.armaSO.imagenInventario,
+                    entry.armaSO.categoriaItem,
+                    entry.armaSO.daño,
+                    entry.armaSO.velocidadAtaque,
+                    entry.armaSO.critico,
+                    entry.armaSO.rareza
+                );
                 Inventario.Instancia.AgregarArma(armaNueva);
+            }
+            else if (entry.tipo == ShopItemType.Pocion && entry.pocionSO != null)
+            {
+                // Crear Pocion usando los datos del ScriptableObject
+                Pocion pocionNueva = new Pocion(
+                    entry.pocionSO.nombre,
+                    entry.pocionSO.descripcion,
+                    entry.pocionSO.prefabModelo,
+                    entry.pocionSO.imagenInventario,
+                    entry.pocionSO.categoriaItem,
+                    entry.pocionSO.duracion,
+                    entry.pocionSO.cantidad
+                );
+                Inventario.Instancia.AgregarPocion(pocionNueva);
             }
             else
             {
-                string nombre = (string)item["nombre"];
-                string descripcion = (string)item["descripcion"];
-                GameObject modelo = (GameObject)item["modelo"];
-                Sprite imagenInventario = (Sprite)item["imagenInventario"];
-                CategoriaItemEnum categoriaItem = (CategoriaItemEnum)item["categoriaItem"];
-                int duracion = (int)item["duracion"];
-                int cantidad = (int)item["cantidad"];
-
-                Pocion pocionNueva = new Pocion(nombre, descripcion, modelo, imagenInventario, categoriaItem, duracion,cantidad);
-
-                Inventario.Instancia.AgregarPocion(pocionNueva);
-
-
+                Debug.LogWarning("Entry inválido en Compra.");
             }
         }
         else
         {
             Debug.Log("No tenes suficientes monedas");
         }
-
-
     }
 
+    public void CerrarLaTienda()
+    {
+        tiendaEnabled = false;
+        // Activar/desactivar scripts de movimiento/cámara
+        foreach (var script in scriptsADesactivar)
+        {
+            script.enabled = true;
+        }
+
+        // Mostrar u ocultar cursor
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1f;
+
+    }
 }
-
-
-
-
-

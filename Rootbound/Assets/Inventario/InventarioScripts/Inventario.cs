@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.XR;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Inventario : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class Inventario : MonoBehaviour
     bool inventoryEnabled;
     public GameObject inventario;
 
+
+    public InformacionArma armaInicial;
 
     private void Awake()
     {
@@ -107,6 +110,22 @@ public class Inventario : MonoBehaviour
         UpdateHotbarInventarioUI();
         UpdateArmaInventarioUI();
         UpdatePocionInventarioUI();
+
+        Arma ArmaInicialMadera = new Arma(
+            armaInicial.Nombre,
+            armaInicial.Descripcion,
+            armaInicial.PrefabModelo,
+            armaInicial.ImagenInventario,
+            armaInicial.CategoriaItem,
+            armaInicial.Daño,
+            armaInicial.VelocidadAtaque,
+            armaInicial.Critico,
+            armaInicial.Rareza
+        );
+
+        AgregarArma(ArmaInicialMadera);
+
+
 
     }
 
@@ -475,6 +494,27 @@ public class Inventario : MonoBehaviour
         }
 
     }
+
+    public void EquiparDesdeHotbar(int hotbarIndex)
+    {
+        Item[] hotbar = ItemsTotales["Hotbar"];
+        if (hotbarIndex < 0 || hotbarIndex >= hotbar.Length) return;
+
+        Item item = hotbar[hotbarIndex];
+        if (item == null) return;
+
+        if (item.CategoriaItem == CategoriaItemEnum.Arma)
+        {
+            // Casteamos a Arma porque el inventario guarda instancias de la clase Arma
+            Arma armaInstancia = item as Arma;
+            if (armaInstancia == null) return;
+
+            // Busca el componente del jugador y le pasa la Arma
+            var player = FindFirstObjectByType<LogicaGuerrero>();
+            if (player != null) player.EquiparArma(armaInstancia);
+        }
+    }
+
 
 
 

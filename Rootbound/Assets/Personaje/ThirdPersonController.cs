@@ -7,18 +7,16 @@ using UnityEngine;
 /// </summary>
 public class ThirdPersonController : MonoBehaviour
 {
-    [Tooltip("Velocidad a la que se mueve el personaje. No se ve afectada por la gravedad ni el salto.")]
-    public float velocidadNormal = 5f;
+    private float velocidadNormal = 5f;
 
-    [Tooltip("Velocidad a la que se mueve el personaje. No se ve afectada por la gravedad ni el salto.")]
-    public float velocidadDeseadaCorrer = 5f;
-    float velocidadCorrer = 1;
+    private float velocidadDeseadaCorrer = 5f;
+    private float velocidadCorrer = 1;
 
     [Tooltip("Cuanto mayor sea el valor, más alto saltará el personaje.")]
     public float jumpForce = 18f;
 
     [Tooltip("Tiempo en el aire. Cuanto mayor sea el valor, más tiempo flotará el personaje antes de caer.")]
-    public float jumpTime = 0.85f;
+    public float jumpTime = 1.5f;
 
     [Space]
     [Tooltip("Fuerza que empuja al jugador hacia abajo. Cambiar este valor afecta todo el movimiento, salto y caída.")]
@@ -38,6 +36,8 @@ public class ThirdPersonController : MonoBehaviour
     Animator animator;
     CharacterController cc;
 
+    LogicaGuerrero logica;
+
     void Start()
     {
         cc = GetComponent<CharacterController>();
@@ -45,6 +45,12 @@ public class ThirdPersonController : MonoBehaviour
 
         if (animator == null)
             Debug.LogWarning("Che bro, no tenés el componente Animator en tu jugador. Sin eso, las animaciones no funcionan.");
+
+        logica = GetComponent<LogicaGuerrero>();
+        if (logica != null)
+        {
+            aplicarEstadisticasDeMovimiento(logica.Datos); // o leer propiedades públicas
+        }
     }
 
     // Update solo se usa acá para detectar teclas y activar animaciones
@@ -69,6 +75,11 @@ public class ThirdPersonController : MonoBehaviour
         // Animaciones de caminar y correr (solo si estás en el suelo)
         if (cc.isGrounded && animator != null)
         {
+
+            //Detectar si esta parado
+            bool isIdle = Mathf.Abs(inputHorizontal) < 0.1f && Mathf.Abs(inputVertical) < 0.1f;
+
+
             // Detectar si hay movimiento (aunque sea leve)
             bool isMoving = Mathf.Abs(inputHorizontal) > 0.1f || Mathf.Abs(inputVertical) > 0.1f;
 
@@ -78,6 +89,8 @@ public class ThirdPersonController : MonoBehaviour
             // Correr = moviendo + Shift
             bool isRunning = isMoving && inputRun;
 
+
+            animator.SetBool("idle", isIdle);
             animator.SetBool("walk", isWalking);
             animator.SetBool("run", isRunning);
         }
@@ -92,6 +105,8 @@ public class ThirdPersonController : MonoBehaviour
         {
             isJumping = true;
             jumpElapsedTime = 0f; // reinicio por si acaso
+            animator.SetTrigger("jump");
+
         }
     }
 
@@ -145,5 +160,12 @@ public class ThirdPersonController : MonoBehaviour
 
         Vector3 movement = verticalDirection + horizontalDirection;
         cc.Move(movement);
+    }
+
+    public void aplicarEstadisticasDeMovimiento(InformacionPersonaje datos)
+    {
+        velocidadNormal = datos.VelocidadMovimiento;
+        velocidadDeseadaCorrer = velocidadNormal * datos.MultiplicadorCorrer;
+        Debug.Log("Se aplicaron las estadisticas obtenidas del intermediario LogicaPersonaje");
     }
 }

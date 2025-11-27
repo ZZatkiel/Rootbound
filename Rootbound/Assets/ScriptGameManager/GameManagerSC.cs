@@ -29,7 +29,8 @@ public class GameManagerSC : MonoBehaviour
         DontDestroyOnLoad(gameObject); //Hace que no se destruya cuando cambie la escena
         scoreManager = new ScoreManager(0);
         audioManager = new AudioManager(gameObject);
-        roundManager = new RoundManager(1); 
+        roundManager = new RoundManager(0);
+
     }
 
 }

@@ -4,26 +4,25 @@ public class ScoreManager
 {
     private int puntos;
 
-    private int Puntos
-    {
-        get { return puntos; }
-
-        set { puntos = value; }
-    }
 
     public ScoreManager(int puntos)
     {
-        Puntos = puntos;
+        this.puntos = puntos;
+    }
+
+    public void reiniciarPuntos()
+    {
+        puntos = 0;
     }
 
     public int obtenerPuntos()
     {
-        return Puntos;
+        return puntos;
     }
 
     public void ResetearPuntos(int x)
     {
-        Puntos = x;
+        puntos = x;
     }
 
     public void modificarPuntos(int x)

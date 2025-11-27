@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: ogro
   vida: 100
   tipoDeEnemigo: 0
-  "da\xF1o": 100
+  "da\xF1o": 5
   velocidadMovimiento: 10
   velocidadAtaque: 100
-  modelo: {fileID: 4393812605529384480, guid: 04964d2ddba8d5449b80f5c990551a20, type: 3}
+  modelo: {fileID: 3642132013119947544, guid: 84fec29860f53044db2b17ccea1d4339, type: 3}

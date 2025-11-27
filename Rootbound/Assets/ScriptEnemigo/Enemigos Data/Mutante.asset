@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: mutante
   vida: 100
   tipoDeEnemigo: 2
-  "da\xF1o": 100
+  "da\xF1o": 2
   velocidadMovimiento: 10
   velocidadAtaque: 100
-  modelo: {fileID: 4393812605529384480, guid: 04964d2ddba8d5449b80f5c990551a20, type: 3}
+  modelo: {fileID: 8753537900020973515, guid: 82498b2760db5aa498393eae4918be82, type: 3}

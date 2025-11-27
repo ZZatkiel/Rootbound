@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f8b309fea0f19f4ab541d33d3fe184f, type: 3}
+  m_Name: EspadaMadera
+  m_EditorClassIdentifier: 
+  nombre: Espada de madera
+  descripcion: EEsapda de madera basica, se le da como primer arma al jugador
+  imagenInventario: {fileID: 21300000, guid: 9b149f547ca1cae46ac778df2cc9d1bc, type: 3}
+  prefabModelo: {fileID: 1121285751338703635, guid: 150e31000c24a7b47aae9f04278cb0f5, type: 3}
+  rareza: 3
+  categoriaItem: 0
+  "da\xF1o": 50
+  velocidadAtaque: 1
+  critico: 0
+  precio: 0

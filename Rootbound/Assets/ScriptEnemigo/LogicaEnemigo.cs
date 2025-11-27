@@ -1,8 +1,17 @@
 using System;
+using System.Collections;
 using UnityEngine;
+
 
 public class LogicaEnemigo : MonoBehaviour
 {
+    [SerializeField] private Renderer modelo;   // MeshRenderer 
+    [SerializeField] private Color colorDaño = Color.red;
+    [SerializeField] private float duracion = 0.2f;
+
+    private Color colorOriginal;
+
+
     // INFORMACION DEL PERSONAJE
     private float vida;
     private float daño;
@@ -27,6 +36,10 @@ public class LogicaEnemigo : MonoBehaviour
     private bool cerca = false;
 
 
+    public Collider ColliderPuñoEnemigo;
+    bool estaAtacando;
+
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -34,6 +47,12 @@ public class LogicaEnemigo : MonoBehaviour
         Arbol = GameObject.FindWithTag(tagArbol);
         anim = GetComponent<Animator>();
 
+        if (modelo == null)
+            modelo = GetComponentInChildren<Renderer>();
+
+        colorOriginal = modelo.material.color;
+
+        ColliderPuñoEnemigo.enabled = false;
     }
 
     private void Update()
@@ -94,9 +113,54 @@ public class LogicaEnemigo : MonoBehaviour
         
     }
 
-
-    public void AtaqueEnemigo()
+    public void RecibirDaño(float cantidad)
     {
+        vida -= cantidad;
+        StartCoroutine(Flash());
+
+        if (vida <= 0)
+        {
+            Morir();
+        }
+    }
+
+    private void Morir()
+    {
+        var reporter = GetComponent<NotificadorDeMuerteEnemigo>();
+        if (reporter != null)
+            reporter.ReportarMuerte();
+        GameManagerSC.Instancia.scoreManager.modificarPuntos(10);
+        Destroy(gameObject);
+    }
+
+
+
+    private IEnumerator Flash()
+    {
+        modelo.material.color = colorDaño;
+        yield return new WaitForSeconds(duracion);
+        modelo.material.color = colorOriginal;
+    }
+
+    public float ObtenerDañoActual()
+    {
+        return daño;
+    }
+
+    public void OnAttackHit()
+    {
+        if (estaAtacando == false){
+            if (ColliderPuñoEnemigo != null) ColliderPuñoEnemigo.enabled = true;
+            estaAtacando = true;
+        }
+
+    }
+
+
+    public void AtaqueTerminado()
+    {
+        if (ColliderPuñoEnemigo != null) ColliderPuñoEnemigo.enabled = false;
+        estaAtacando = false;
 
     }
 

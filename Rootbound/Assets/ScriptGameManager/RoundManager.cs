@@ -3,17 +3,24 @@ using UnityEngine;
 public class RoundManager
 {
     private float ronda;
+    private float numeroEnemigo;
 
     public RoundManager(float ronda)
     {
-        ronda = Ronda;
-
+        this.ronda = ronda;
+        numeroEnemigo = NumeroEnemigo;
     }
 
-    private float Ronda
+    private float NumeroEnemigo
     {
-        get { return ronda; }
-        set { ronda = value; }
+        get { return numeroEnemigo; }
+        set { numeroEnemigo = value; }
+    }
+
+
+    public void reiniciarRonda()
+    {
+        ronda = 0f; 
     }
 
     public float obtenerRonda()
@@ -24,6 +31,7 @@ public class RoundManager
     public void avanzarRonda()
     {
         ronda++;
+        numeroEnemigo = numeroEnemigo + 8f;
 
     }
 
@@ -31,5 +39,7 @@ public class RoundManager
     {
         return 1f + (ronda - 1) * 0.35f;
     }
-
 }
+    
+
+

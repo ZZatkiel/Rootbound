@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f8b309fea0f19f4ab541d33d3fe184f, type: 3}
+  m_Name: EspadaHeroica
+  m_EditorClassIdentifier: 
+  nombre: Espada heroica
+  descripcion: "Una espada con un buen da\xF1o y con una velocidad anormal"
+  imagenInventario: {fileID: 21300000, guid: 9b149f547ca1cae46ac778df2cc9d1bc, type: 3}
+  prefabModelo: {fileID: 3552393975715444642, guid: 97e762946194d054da2ce0ce3f048462, type: 3}
+  rareza: 0
+  categoriaItem: 0
+  "da\xF1o": 30
+  velocidadAtaque: 15
+  critico: 2
+  precio: 45

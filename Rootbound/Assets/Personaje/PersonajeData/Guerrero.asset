@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d461e629eac1864581fe3517a4ebdb8, type: 3}
   m_Name: Guerrero
   m_EditorClassIdentifier: 
-  TipoPersonaje: 0
-  vidaMaxima: 0
-  velocidadMovimiento: 0
-  multiplicadorCorrer: 0
-  "da\xF1oDeAtaque": 0
-  rangoDeAtaque: 0
-  ataqueCritico: 0
-  velocidadAtaque: 0
-  recargaDeAtaque: 0
+  tipoDePersonaje: 0
+  vida: 100
+  velocidadMovimiento: 6
+  multiplicadorCorrer: 2
+  "da\xF1oDeAtaque": 10
+  rangoDeAtaque: 10
+  ataqueCritico: 10
+  velocidadAtaque: 10
+  recargaDeAtaque: 10

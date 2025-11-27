@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - HitboxPlayer
   - HitboxArbol
+  - Arma
   layers:
   - Default
   - TransparentFX
