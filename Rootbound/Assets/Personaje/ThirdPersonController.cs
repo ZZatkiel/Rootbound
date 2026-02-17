@@ -1,33 +1,24 @@
 using UnityEngine;
 
-/// <summary>
-/// Script principal para el movimiento en tercera persona del personaje en el juego.
-/// Asegurate de que el objeto que reciba este script (el jugador)
-/// tenga el tag Player y el componente Character Controller.
-/// </summary>
+
+/*
+ * Script del movimiento del personaje
+ * En este script se mueve el persoanaje mediante inputs y la posicion relativa de la camara
+ * ACLARACION, NO SE REALIZA LA ROTACION DE LA CAMARA ACA
+*/
+
+
 public class ThirdPersonController : MonoBehaviour
 {
-    private float velocidadNormal = 5f;
+    private float velocidadNormal = 4f;
+    private float velocidadDeseadaCorrer = 6f;
+    private float velocidadCorrer = 0f;
 
-    private float velocidadDeseadaCorrer = 5f;
-    private float velocidadCorrer = 1;
+    public float fuerzaDeSalto = 10f;
+    public float gravedad = 20f;
 
-    [Tooltip("Cuanto mayor sea el valor, más alto saltará el personaje.")]
-    public float jumpForce = 18f;
+    private float velocidadVertical = 0f;
 
-    [Tooltip("Tiempo en el aire. Cuanto mayor sea el valor, más tiempo flotará el personaje antes de caer.")]
-    public float jumpTime = 1.5f;
-
-    [Space]
-    [Tooltip("Fuerza que empuja al jugador hacia abajo. Cambiar este valor afecta todo el movimiento, salto y caída.")]
-    public float gravity = 9.8f;
-
-    float jumpElapsedTime = 0;
-
-    // Estado de salto
-    bool isJumping = false;
-
-    // Inputs
     float inputHorizontal;
     float inputVertical;
     bool inputJump;
@@ -35,8 +26,13 @@ public class ThirdPersonController : MonoBehaviour
 
     Animator animator;
     CharacterController cc;
-
     LogicaGuerrero logica;
+
+    float coyoteTime = 3f;
+    float coyoteCounter;
+
+
+
 
     void Start()
     {
@@ -44,98 +40,27 @@ public class ThirdPersonController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         if (animator == null)
-            Debug.LogWarning("Che bro, no tenés el componente Animator en tu jugador. Sin eso, las animaciones no funcionan.");
+            Debug.LogWarning("No tenes el componente Animator en tu jugador.");
 
         logica = GetComponent<LogicaGuerrero>();
         if (logica != null)
-        {
-            aplicarEstadisticasDeMovimiento(logica.Datos); // o leer propiedades públicas
-        }
+            aplicarEstadisticasDeMovimiento(logica.Datos);
     }
 
-    // Update solo se usa acá para detectar teclas y activar animaciones
     void Update()
     {
-        // Detectores de Input
+        // ---------------- INPUT ----------------
         inputHorizontal = Input.GetAxisRaw("Horizontal");
         inputVertical = Input.GetAxisRaw("Vertical");
-        inputJump = Input.GetButtonDown("Jump"); // detecta el momento de presionar
-
+        inputJump = Input.GetKeyDown(KeyCode.Space);
         inputRun = Input.GetKey(KeyCode.LeftShift);
 
-        if (inputRun)
-        {
-            velocidadCorrer = velocidadDeseadaCorrer;
-        }
-        else
-        {
-            velocidadCorrer = 1f;
-        }
+        Debug.Log($"Fuerza de salto {fuerzaDeSalto}");
 
-        // Animaciones de caminar y correr (solo si estás en el suelo)
-        if (cc.isGrounded && animator != null)
-        {
+        velocidadCorrer = inputRun ? velocidadDeseadaCorrer : 0f;
+        float velocidadTotal = velocidadNormal + velocidadCorrer;
 
-            //Detectar si esta parado
-            bool isIdle = Mathf.Abs(inputHorizontal) < 0.1f && Mathf.Abs(inputVertical) < 0.1f;
-
-
-            // Detectar si hay movimiento (aunque sea leve)
-            bool isMoving = Mathf.Abs(inputHorizontal) > 0.1f || Mathf.Abs(inputVertical) > 0.1f;
-
-            // Caminar = moviendo + NO Shift
-            bool isWalking = isMoving && !inputRun;
-
-            // Correr = moviendo + Shift
-            bool isRunning = isMoving && inputRun;
-
-
-            animator.SetBool("idle", isIdle);
-            animator.SetBool("walk", isWalking);
-            animator.SetBool("run", isRunning);
-        }
-
-
-        // Animación de salto (aire)
-        if (animator != null)
-            animator.SetBool("air", cc.isGrounded == false);
-
-        // Manejo del salto: iniciamos salto solo si se presionó y estamos en el piso
-        if (inputJump && cc.isGrounded)
-        {
-            isJumping = true;
-            jumpElapsedTime = 0f; // reinicio por si acaso
-            animator.SetTrigger("jump");
-
-        }
-    }
-
-    // FixedUpdate aplica el movimiento real
-    private void FixedUpdate()
-    {
-        // Movimiento horizontal y vertical (sin sprint)
-        float directionX = inputHorizontal * (velocidadNormal + velocidadCorrer) * Time.deltaTime;
-        float directionZ = inputVertical * (velocidadNormal + velocidadCorrer) * Time.deltaTime;
-        float directionY = 0;
-
-        // Manejo del salto
-        if (isJumping)
-        {
-            directionY = Mathf.SmoothStep(jumpForce, jumpForce * 0.30f, jumpElapsedTime / jumpTime) * Time.deltaTime;
-
-            // Timer del salto
-            jumpElapsedTime += Time.deltaTime;
-            if (jumpElapsedTime >= jumpTime)
-            {
-                isJumping = false;
-                jumpElapsedTime = 0;
-            }
-        }
-
-        // Aplicar gravedad
-        directionY = directionY - gravity * Time.deltaTime;
-
-        // --- Rotación del personaje según cámara y entrada ---
+        // ---------------- DIRECCIÓN CÁMARA ----------------
         Vector3 camForward = Camera.main.transform.forward;
         Vector3 camRight = Camera.main.transform.right;
 
@@ -144,28 +69,66 @@ public class ThirdPersonController : MonoBehaviour
         camForward.Normalize();
         camRight.Normalize();
 
-        // Usamos la entrada para calcular la dirección horizontal (esto evita depender de valores muy pequeños por deltaTime)
-        Vector3 moveDir = camForward * inputVertical + camRight * inputHorizontal;
+        Vector3 horizontalDirection = camForward * inputVertical + camRight * inputHorizontal;
 
-        if (moveDir.sqrMagnitude > 0.001f)
+        if (horizontalDirection.magnitude > 1)
+            horizontalDirection.Normalize();
+
+        // ---------------- ROTACIÓN ----------------
+        if (horizontalDirection.magnitude > 0.1f)
         {
-            Quaternion targetRot = Quaternion.LookRotation(moveDir.normalized, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 0.15f);
+            Quaternion targetRot = Quaternion.LookRotation(horizontalDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10f * Time.deltaTime);
         }
 
-        // --- Fin rotación ---
+        horizontalDirection *= velocidadTotal;
 
-        Vector3 verticalDirection = Vector3.up * directionY;
-        Vector3 horizontalDirection = (camForward * directionZ) + (camRight * directionX);
+        // ---------------- SALTO Y GRAVEDAD ----------------
+        if (cc.isGrounded)
+        {
+            coyoteCounter = coyoteTime;
 
-        Vector3 movement = verticalDirection + horizontalDirection;
-        cc.Move(movement);
+            if (velocidadVertical < 0)
+                velocidadVertical = -2f;
+        }
+        else
+        {
+            coyoteCounter -= Time.deltaTime;
+        }
+
+        // Salto
+        if (inputJump && coyoteCounter > 0f)
+        {
+            velocidadVertical = fuerzaDeSalto;
+            animator?.SetTrigger("jump");
+            coyoteCounter = 0f;
+        }
+
+        velocidadVertical -= gravedad * Time.deltaTime;
+
+        Vector3 verticalDirection = Vector3.up * velocidadVertical;
+
+        // ---------------- MOVIMIENTO FINAL ----------------
+        Vector3 movement = horizontalDirection + verticalDirection;
+        cc.Move(movement * Time.deltaTime);
+
+        // ---------------- ANIMACIONES ----------------
+        if (animator != null)
+        {
+            bool isIdle = horizontalDirection.magnitude < 0.1f && cc.isGrounded;
+            bool isWalking = horizontalDirection.magnitude > 0.1f && !inputRun && cc.isGrounded;
+            bool isRunning = horizontalDirection.magnitude > 0.1f && inputRun && cc.isGrounded;
+
+            animator.SetBool("idle", isIdle);
+            animator.SetBool("walk", isWalking);
+            animator.SetBool("run", isRunning);
+            animator.SetBool("air", !cc.isGrounded);
+        }
     }
 
     public void aplicarEstadisticasDeMovimiento(InformacionPersonaje datos)
     {
         velocidadNormal = datos.VelocidadMovimiento;
         velocidadDeseadaCorrer = velocidadNormal * datos.MultiplicadorCorrer;
-        Debug.Log("Se aplicaron las estadisticas obtenidas del intermediario LogicaPersonaje");
     }
 }

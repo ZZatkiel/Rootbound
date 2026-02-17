@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tipoDePersonaje: 0
   vida: 100
-  velocidadMovimiento: 6
+  velocidadMovimiento: 3.5
   multiplicadorCorrer: 2
   "da\xF1oDeAtaque": 10
   rangoDeAtaque: 10
