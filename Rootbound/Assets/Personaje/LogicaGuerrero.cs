@@ -1,58 +1,62 @@
 using UnityEngine;
 
+/*
+ * ESTE SCRIPT MANEJA VARIAS PARTES DE LA LOGICA DEL PERSONAJE
+ *  - EL MANEJO DE LAS STATS DEL PERSONAJE
+ *  - EL MANEJO DE LA MUERTE/DAÑO DEL PERSONAJE
+ *  - UNA PARTE DEL MANEJO DE LA HOTBAR DEPENDIENTE AL SCRIPT INVENTARIO
+ * 
+*/ 
+
+
 public class LogicaGuerrero : MonoBehaviour
 {
-    [SerializeField] private InformacionPersonaje datos; // tu SO base
-    [SerializeField] private Transform manoDerecha; // asignar en inspector
+    [Header("Referencias")]
+    [SerializeField] private InformacionPersonaje datos;
+    [SerializeField] private Transform manoDerecha;
+    [SerializeField] private Animator animator;
+    [SerializeField] private GameObject manejadorDerrota;
 
-    public InformacionPersonaje Datos {  get { return datos; } }
 
-    private int ultimoHotbarIndexSeleccionado = -1; // para toggle
-
-
-    // instancia visual del arma equipada
-    private GameObject instanciaModelo;
     private Arma armaEquipada;
+    private GameObject instanciaModelo;
+    private Collider colliderArma;
 
-    // stats base (cargados desde datos)
-    private float vidaBase;
+
+    private float vidaMaxima;
+    private float vidaActual;
+
     private float dañoBase;
     private float velocidadAtaqueBase;
     private float criticoBase;
 
-    // stats actuales (usadas por la lógica de combate)
     private float dañoActual;
     private float velocidadAtaqueActual;
     private float criticoActual;
 
-    [SerializeField] private Animator animator;
 
-    // control de estado / cooldown
+
+    public InformacionPersonaje Datos {  get { return datos; } }
+    private int ultimoHotbarIndexSeleccionado = -1;
+
+
     private float siguienteAtaqueTiempo = 0f;
     private bool estaAtacando = false;
-
-    private GameObject ArmaObjeto;
-    private Collider colliderArma;
-
-    public GameObject manejadorDerrota;
-
 
     // -------------------------------------------------
 
 
     private void Awake()
     {
-        if (datos != null)
-        {
-            vidaBase = datos.Vida;
-            dañoBase = datos.DañoDeAtaque;
-            velocidadAtaqueBase = datos.VelocidadAtaque;
-            criticoBase = datos.AtaqueCritico;
-        }
-        // Inicializar actuales a base
-        RecalcularStatsPorBase();
-    }
+        vidaMaxima = datos.Vida;
+        vidaActual = vidaMaxima;
 
+        dañoBase = datos.DañoDeAtaque;
+        velocidadAtaqueBase = datos.VelocidadAtaque;
+        criticoBase = datos.AtaqueCritico;
+
+        RecalcularStats();
+    }
 
     private void Update()
     {
@@ -66,75 +70,85 @@ public class LogicaGuerrero : MonoBehaviour
             IntentarAtacar();
         }
     }
-    private void RecalcularStatsPorBase()
+    private void RecalcularStats()
     {
         dañoActual = dañoBase;
         velocidadAtaqueActual = velocidadAtaqueBase;
         criticoActual = criticoBase;
+
+        if (armaEquipada != null)
+        {
+            dañoActual += armaEquipada.Daño;
+            velocidadAtaqueActual += armaEquipada.VelocidadDeAtaque;
+            criticoActual += armaEquipada.AtaqueCritico;
+        }
     }
 
-    // Equipa una Arma (clase Arma que ya guardas en inventario)
+
+
+
+    // METODOS DEL ACCESO AL ARMA DEL HOTBAR
+
+
     public void EquiparArma(Arma arma)
     {
         if (arma == null) return;
 
-        // Si es la misma arma que ya tengo, ignoro (o podrías toggleear)
-        if (armaEquipada == arma)
-        {
-            Debug.Log("Ya está equipada esa misma arma.");
-            return;
-        }
-
-        // Desequipar si hay una equipada
         DesequiparArma();
 
-        // Guardar referencia a la nueva arma
         armaEquipada = arma;
+        instanciaModelo = Instantiate(arma.Modelo, manoDerecha);
+        instanciaModelo.transform.localPosition = Vector3.zero;
+        instanciaModelo.transform.localRotation = Quaternion.Euler(0, 180, 0);
 
-        // Instanciar modelo visual si existe
-        if (arma.Modelo != null && manoDerecha != null)
-        {
-            instanciaModelo = Instantiate(arma.Modelo, manoDerecha);
-            instanciaModelo.transform.localPosition = Vector3.zero;
-            instanciaModelo.transform.localRotation = Quaternion.Euler(0,180,0);
-        }
+        colliderArma = instanciaModelo.GetComponent<Collider>();
+        if (colliderArma != null)
+            colliderArma.enabled = false;
 
-        // Aplicar stats: ejemplo suma directa
-        dañoActual = dañoBase + arma.Daño;
-        velocidadAtaqueActual = velocidadAtaqueBase + arma.VelocidadDeAtaque;
-        criticoActual = criticoBase + arma.AtaqueCritico;
+        RecalcularStats();
 
-        Debug.Log($"Equipado {arma.Nombre}. Daño: {dañoActual}, Velocidad: {velocidadAtaqueActual}, Crit: {criticoActual}");
-
-        ArmaObjeto = GameObject.FindGameObjectWithTag("Arma");
-        colliderArma = ArmaObjeto.GetComponent<Collider>();
-        colliderArma.enabled = false;
 
     }
 
-    // Desequipa arma actual (revierte stats y destruye visual)
     public void DesequiparArma()
     {
-        if (armaEquipada == null && instanciaModelo == null)
-            return; // nada que hacer
+        if (armaEquipada == null && instanciaModelo == null) return;
 
-        // destruir modelo visual si existe
         if (instanciaModelo != null)
         {
             Destroy(instanciaModelo);
             instanciaModelo = null;
         }
 
-        // quitar referencia
         armaEquipada = null;
 
-        // volver a stats base
-        RecalcularStatsPorBase();
+        RecalcularStats();
 
-        Debug.Log("Arma desequipada. Stats revertidos a base.");
     }
 
-    // Método helper para obtener el daño actual (usar en cálculo de daño)
+    private void ProcesarHotbar(int index)
+    {
+        if (ultimoHotbarIndexSeleccionado == index)
+        {
+            var player = FindFirstObjectByType<LogicaGuerrero>();
+            if (player != null) player.DesequiparArma();
+            ultimoHotbarIndexSeleccionado = -1;
+            return;
+        }
+
+        Inventario.Instancia.EquiparDesdeHotbar(index);
+        ultimoHotbarIndexSeleccionado = index;
+    }
+
+
+
+
+
+
+
+    // METODOS ACCESORES DE DATOS DE LA LOGICA DEL GUERRERO
+
+
     public float ObtenerDañoActual()
     {
         return dañoActual;
@@ -142,28 +156,23 @@ public class LogicaGuerrero : MonoBehaviour
 
     public float ObtenerVidaActual()
     {
-        return vidaBase;
+        return vidaActual;
     }
 
-    // Exponer si hay arma equipada (útil para UI)
+    public float ObtenerCriticoActual()
+    {
+        return criticoActual;
+    }
+
     public bool HayArmaEquipada() => armaEquipada != null;
 
-    private void ProcesarHotbar(int index)
-    {
-        // Si el jugador ya tenía seleccionado ese slot -> toggle (desequipar)
-        if (ultimoHotbarIndexSeleccionado == index)
-        {
-            // desequipar
-            var player = FindFirstObjectByType<LogicaGuerrero>();
-            if (player != null) player.DesequiparArma();
-            ultimoHotbarIndexSeleccionado = -1;
-            return;
-        }
 
-        // sino, equipar lo del hotbar (llama a Inventario)
-        Inventario.Instancia.EquiparDesdeHotbar(index);
-        ultimoHotbarIndexSeleccionado = index;
-    }
+
+
+
+
+    // METODOS DEL ATAQUE DEL GUERRERO
+
 
     private void IntentarAtacar()
     {
@@ -191,12 +200,10 @@ public class LogicaGuerrero : MonoBehaviour
         }
     }
 
-
     public void OnAttackHit()
     {
         if (colliderArma != null) colliderArma.enabled = true;
     }
-
 
     public void AtaqueTerminado()
     {
@@ -205,11 +212,17 @@ public class LogicaGuerrero : MonoBehaviour
         if (animator != null) animator.SetTrigger("attackEnd");
     }
 
+
+
+    // METODOS DE MUERTE/RECIBIR DAÑO DEL GUERRERO
+
+
+
     public void recibirDaño(float cantidad)
     {
-        vidaBase -= cantidad;
+        vidaActual -= cantidad;
 
-        if (vidaBase <= 0)
+        if (vidaActual <= 0)
         {
             Morir();
         }
@@ -226,5 +239,9 @@ public class LogicaGuerrero : MonoBehaviour
 
         manejadorDerrota.SetActive(true);
     }
+
+
+
+
 
 }
