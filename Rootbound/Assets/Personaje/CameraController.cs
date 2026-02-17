@@ -1,17 +1,14 @@
-
 using UnityEngine;
 
-
-/// <summary>
-/// Camera movement script for third person games.
-/// This Script should not be applied to the camera! It is attached to an empty object and inside
-/// it (as a child object) should be your game's MainCamera.
-/// </summary>
+/*
+ * SCRIPT DE ROTACION DE LA CAMARA Y EL SCROLL DEL FOV
+ * ESTE SCRIPT COMPLEMENTA AL SCRIPT THIRDPERSONCONTROLLER
+*/
 
 public class CameraController : MonoBehaviour
 {
 
-    public float zoom = 30;
+    public float zoom;
     public float sensitivity = 5f;
 
     public Vector2 cameraLimit = new Vector2(-45, 40);
@@ -25,6 +22,8 @@ public class CameraController : MonoBehaviour
     void Start()
     {
 
+        zoom = Camera.main.fieldOfView;
+
         player = GameObject.FindWithTag("Player").transform;
         offsetDistanceY = transform.position.y;
 
@@ -35,12 +34,21 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
 
         transform.position = player.position + new Vector3(0, offsetDistanceY, 0);
 
-        if (Input.GetAxis("Mouse ScrollWheel") != 0)
-            zoom -= Input.GetAxis("Mouse ScrollWheel") * sensitivity * 2;
-            Camera.main.fieldOfView = Mathf.Clamp(zoom, -40, 45);
+        if (scroll != 0)
+        {
+            zoom -= scroll * sensitivity * 2;
+            zoom = Mathf.Clamp(zoom, 40f, 90f);
+            Camera.main.fieldOfView = zoom;
+
+
+        }
+
+
+
 
         mouseX += Input.GetAxis("Mouse X") * sensitivity;
         mouseY += Input.GetAxis("Mouse Y") * sensitivity;
