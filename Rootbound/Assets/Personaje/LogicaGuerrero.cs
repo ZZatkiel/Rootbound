@@ -108,6 +108,7 @@ public class LogicaGuerrero : MonoBehaviour
 
         ArmaObjeto = GameObject.FindGameObjectWithTag("Arma");
         colliderArma = ArmaObjeto.GetComponent<Collider>();
+        colliderArma.enabled = false;
 
     }
 
