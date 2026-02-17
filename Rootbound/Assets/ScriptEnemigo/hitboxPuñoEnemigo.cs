@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/*
+ * ESTE SCRIPT CONTROLA LA HITBOX DEL PUÑO DEL ENEMIGO.
+ * SE ENCARGA DE DETECTAR CUANDO EL ENEMIGO GOLPEA AL JUGADOR O AL ÁRBOL.
+ * 
+*/
+
 public class hitboxPuñoEnemigo : MonoBehaviour
 {
 

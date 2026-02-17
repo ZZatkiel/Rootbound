@@ -1,5 +1,8 @@
 using UnityEngine;
 
+// Es el manejador de audio de la partida
+// Es parte del GameManager
+
 public class AudioManager
 {
     private AudioSource musicAudio; //Musica

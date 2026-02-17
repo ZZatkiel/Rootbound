@@ -1,4 +1,6 @@
-using UnityEngine;
+
+// Es el manejador del score de la partida
+// Es parte del GameManager
 
 public class ScoreManager
 {

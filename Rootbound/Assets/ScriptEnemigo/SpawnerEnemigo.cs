@@ -1,6 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
+/*
+ * ESTE SCRIPT ES UN ADMINISTRADOR DE RONDAS Y SPAWN DE ENEMIGOS EN UN JUEGO TIPO MODO HORDA.
+ * SE ENCARGA DE:
+ * 
+ * CREAR ENEMIGOS EN DIFERENTES PUNTOS DEL MAPA.
+ * AUMENTAR LA CANTIDAD DE ENEMIGOS EN CADA RONDA.
+ * DIVIDIR CADA RONDA EN MINI-RONDAS.
+ * ESPERAR A QUE EL JUGADOR ELIMINE A TODOS LOS ENEMIGOS ANTES DE CONTINUAR.
+ * ABRIR LA TIENDA A MITAD DE RONDA.
+ * CONTROLAR LOS TIEMPOS ENTRE SPAWNS, MINI-RONDAS Y RONDAS. 
+ * 
+ * 
+*/
+
+
 public class SpawnerEnemigoManager : MonoBehaviour
 {
     [Header("Configuración Enemigos")]
@@ -47,7 +62,7 @@ public class SpawnerEnemigoManager : MonoBehaviour
             GameManagerSC.Instancia.roundManager.avanzarRonda();
             rondaActual = (int)GameManagerSC.Instancia.roundManager.obtenerRonda();
 
-            enemigosVivos = 0; // reset por si quedó algo raro
+            enemigosVivos = 0; 
             enemigosSpawneadosEstaRonda = 0;
             Debug.Log($"--- RONDA {rondaActual} ---");
 
@@ -71,8 +86,6 @@ public class SpawnerEnemigoManager : MonoBehaviour
                 {
                     tienda.MostrarArmasEnUI();
 
-                    // Esperamos a que el jugador cierre la tienda si la tienda usa tiendaEnabled
-                    // Si tu Tienda no tiene esa propiedad, podés eliminar la línea siguiente.
                     yield return new WaitWhile(() => tienda != null && tienda.tiendaEnabled);
                 }
 

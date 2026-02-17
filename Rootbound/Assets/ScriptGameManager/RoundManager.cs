@@ -1,4 +1,5 @@
-using UnityEngine;
+// Es el manejador de las rondas de la partida
+// Es parte del GameManager
 
 public class RoundManager
 {

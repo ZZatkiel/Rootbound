@@ -2,7 +2,22 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-
+/*
+ * ESTE SCRIPT CONTROLA EL COMPORTAMIENTO DE UN ENEMIGO EN EL JUEGO.
+ * 
+ * SE ENCARGA DE:
+ * 
+ * BUSCAR UN OBJETIVO (EL JUGADOR O UN ÁRBOL).
+ * PERSEGUIR AL OBJETIVO MÁS CERCANO SEGÚN LA DISTANCIA.
+ * ROTAR Y MOVERSE HACIA ESE OBJETIVO.
+ * ATACAR ACTIVANDO EL COLLIDER DEL PUÑO.
+ * RECIBIR DAÑO Y CAMBIAR DE COLOR CUANDO LO GOLPEAN.
+ * MORIR CUANDO SU VIDA LLEGA A CERO.
+ * SUMAR PUNTOS AL JUGADOR CUANDO MUERE. 
+ * 
+ * 
+ * 
+*/
 public class LogicaEnemigo : MonoBehaviour
 {
     [SerializeField] private Renderer modelo;   // MeshRenderer 

@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
+//SCRIPT QUE MANEJA EL DAÑO/MUERTE DEL ARBOL, EL CUAL SI SE MUERE EL ARBOL, SE PIERDE LA PARTIDA
 
 public class ArbolScript : MonoBehaviour
 {

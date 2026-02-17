@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+
+// Este srcipt aparece cuando te matan en la partida, este menu puede o volver a cargar la partida/escena o ir al menu principal donde podes empezar una nueva partida
 public class PartidaPerdidaScript : MonoBehaviour
 {
     public MonoBehaviour[] ScriptsDesactivar;
