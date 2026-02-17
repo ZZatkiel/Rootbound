@@ -1,12 +1,16 @@
 using UnityEngine;
 
+/*
+ * USAMOS ESTE SCRIPT PARA CREAR OBJETOS DESDE EL EDITOR Y LUEGO OBTENER SUS CARACTERISTICAS POR MEDIO DE REFERENCIA 
+*/
+
 [CreateAssetMenu(menuName = "EstadisticaArma")]
 public class InformacionArma : ScriptableObject
 {
     public string nombre;
     [TextArea] public string descripcion;
     public Sprite imagenInventario;
-    public GameObject prefabModelo;    // Prefab que se instancia en la mano
+    public GameObject prefabModelo;
     public RarezaArmas rareza;
     public CategoriaItemEnum categoriaItem;
 

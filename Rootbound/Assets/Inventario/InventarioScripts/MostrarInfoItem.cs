@@ -1,8 +1,12 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+
+/*
+ * ESTA CLASE COLOCA/RESETEA LA INFORMACION DE LAS STATS DE LOS ITEMS DENTRO INVENTARIO EN EL APARTADO DE INFO
+*/
 
 public class MostrarInfoItem : MonoBehaviour , IPointerClickHandler
 {

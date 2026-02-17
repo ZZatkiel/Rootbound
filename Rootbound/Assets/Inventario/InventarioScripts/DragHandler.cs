@@ -1,8 +1,13 @@
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+/*
+ * ESTE SCRIPT NOS PERMITE INTERACTUAR CON EL CANVAS DEL INVENTARIO PARA OBTENER QUE ESTA DEBAJO MEDIANTE EL RAYCAST DEL CANVAS
+ * EN ESTE SCRIPT USAMOS LAS INTEFFACES DE DRAGHANDLER PARA FACILITAR EL MOVIMIENTO EN LA UI
+*/
+
 
 public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -69,11 +74,9 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         if (dragIcon != null)
             Destroy(dragIcon);
 
-        // Reactivar raycasts del slot original
         var cg = GetComponent<CanvasGroup>();
         if (cg != null) cg.blocksRaycasts = true;
 
-        // Hacer raycast desde el canvas para encontrar el slot debajo del cursor
         if (raycaster == null) return;
 
         List<RaycastResult> results = new List<RaycastResult>();
@@ -85,14 +88,12 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
             if (other != null)
             {
-                // pedir al inventario que mueva/intercambie
                 if (Inventario.Instancia != null)
                 {
                     bool ok = Inventario.Instancia.Swap(slot.GetCategoria(), slot.GetIndex(), other.GetCategoria(), other.GetIndex());
                     if (!ok)
                     {
                         Debug.Log("Movimiento no válido — el item volverá a su lugar.");
-                        // No necesitamos hacer nada más: como no se movió, el item sigue en el slot original.
                     }
                     else
                     {

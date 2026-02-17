@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/*
+ * ESTE SCRIPT NOS PERMITE SIMULAR UN EMPUJE USANDO LA RESTA DE VECTORES PARA OBTENER LA DIRECCION Y USANDO MOVE
+ * LO HAGO DE ESTA MANERA YA QUE COMO NO SON COMPATIBLES LOS SISTEMAS DE FISICAS DEL RIGIDBODY Y EL CHARACTERCONTROLLER, TUVE QUE IMPROVISAR
+ * 
+*/ 
+
 public class HitboxJugador : MonoBehaviour
 {
     private string tagJugador = "Player";
@@ -17,17 +23,12 @@ public class HitboxJugador : MonoBehaviour
         {
             CharacterController cc = Jugador.GetComponent<CharacterController>();
 
-            Debug.Log("El enemigo toco al jugador");
-
             Vector3 pushDir = Jugador.transform.position - other.transform.position;
-            pushDir.y = 0f; // Ignora la componente vertical
+            pushDir.y = 0f;
             pushDir.Normalize();
 
-            // Empuja al jugador
             cc.Move(pushDir * 2 * Time.deltaTime);
 
-            // IDEA: 
-            // DESACTIVAR EL MOVIMIENTO PARA IR HACIA ADELANTE DE MI CHARACTERCONTROLLER
         }
     }
 }

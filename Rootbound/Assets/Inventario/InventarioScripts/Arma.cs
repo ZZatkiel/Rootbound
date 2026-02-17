@@ -1,6 +1,12 @@
 using UnityEngine;
 
-
+/*
+ * SCRIPT DONDE CREAMOS EL ARMA HERENDANDO DE ITEM, USAMOS ESTE SCRIP EN DIVERSOS LUGARES
+ *  - INVENTARIO
+ *  - TIENDA
+ *  - HOTBAR
+ * 
+*/ 
 public enum RarezaArmas
 {
     Legendario,

@@ -3,11 +3,15 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+ * SCRIPT EL CUAL ES UNA PARTE IMPORTANTE DEL INVENTARIO
+ * EN ESTE SE ALMACENA LA INFORMACION DEL ITEM, Y DONDE CADA UNO DE ESTOS SLOTS ESTA ENLAZADO CON LA LISTA DE EXTERNA
+*/
 public class Slot : MonoBehaviour
 {
     Item item;
-    Image iconoDelSlot; // Imagen donde se guarda el item
-    Sprite IconoPorDefecto; //Si no tiene icono el item
+    Image iconoDelSlot; 
+    Sprite IconoPorDefecto; 
     Text contadorPocion;
     Sprite imageSlot;
 

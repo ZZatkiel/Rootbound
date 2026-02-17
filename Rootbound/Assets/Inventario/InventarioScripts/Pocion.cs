@@ -1,6 +1,8 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
+/*
+ * CLASE DONDE SE ENCUENTRA LAS POCIONES
+*/
 public class Pocion : Item
 {
     private int duracion;

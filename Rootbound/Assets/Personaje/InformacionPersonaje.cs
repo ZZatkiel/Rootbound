@@ -29,15 +29,4 @@ public class InformacionPersonaje : ScriptableObject
     public float VelocidadAtaque { get { return velocidadAtaque; } }
     public float RecargaDeAtaque { get { return recargaDeAtaque; } }
 
-
-
-
-
 }
-//Infomracion del personaje
-// CREAR UN SCRIPTABLEOBJECT PARA LOS DATOS DEL PERSONAJE, EL ARQUERO TENDRA SUS RESPECTIVOS DATOS Y EL GUERRO LOS SUYOS
-// AMBOS TIENE LA MISMA LOGICA DE MOVIMIENTO Y CAMARA
-// EL COMBATE SERA DIFERENTE EN CADA CASO
-
-// RESPECTO AL ARMA, SE BUSCARA UNA ANIMACION EL CUAL EL ENEMIGO ATAQUE CON UN ARMA Y SE LE REEMPLAZARA EL ITEM POR EL SELECCIONADO EN EL INVETARIO
-

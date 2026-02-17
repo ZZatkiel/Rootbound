@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/*
+ * CLASE PADRE DE LOS ITEMS POCION Y ARMA
+*/
 public enum CategoriaDelSlotEnum
 {
     ArmaSlot,
