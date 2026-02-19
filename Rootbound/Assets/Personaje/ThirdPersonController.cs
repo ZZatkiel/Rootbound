@@ -28,8 +28,8 @@ public class ThirdPersonController : MonoBehaviour
     CharacterController cc;
     LogicaGuerrero logica;
 
-    float coyoteTime = 3f;
-    float coyoteCounter;
+    float tiempoMaximo = 3f;
+    float contadorTiempo;
 
 
 
@@ -47,6 +47,7 @@ public class ThirdPersonController : MonoBehaviour
             aplicarEstadisticasDeMovimiento(logica.Datos);
     }
 
+    
     void Update()
     {
         // ---------------- INPUT ----------------
@@ -82,26 +83,26 @@ public class ThirdPersonController : MonoBehaviour
         }
 
         horizontalDirection *= velocidadTotal;
-
+        
         // ---------------- SALTO Y GRAVEDAD ----------------
         if (cc.isGrounded)
         {
-            coyoteCounter = coyoteTime;
+            contadorTiempo = tiempoMaximo;
 
             if (velocidadVertical < 0)
                 velocidadVertical = -2f;
         }
         else
         {
-            coyoteCounter -= Time.deltaTime;
+            contadorTiempo -= Time.deltaTime;
         }
 
         // Salto
-        if (inputJump && coyoteCounter > 0f)
+        if (inputJump && contadorTiempo > 0f)
         {
             velocidadVertical = fuerzaDeSalto;
             animator?.SetTrigger("jump");
-            coyoteCounter = 0f;
+            contadorTiempo = 0f;
         }
 
         velocidadVertical -= gravedad * Time.deltaTime;
