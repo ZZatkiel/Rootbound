@@ -7,29 +7,35 @@ public class HUD : MonoBehaviour
     public GameObject personaje;
     private LogicaGuerrero personajeDatos;
 
+    public GameObject arbol;
+    private ArbolScript arbolDatos;
+
     public GameObject spawnDeEnemigos;
     private SpawnerEnemigoManager spawnerDatos;
 
 
-    int vidaActual;
+    int vidaActualPersonaje;
     int puntosActuales;
 
     int rondaActual;
     int miniRondasActual;
 
+    int vidaActualArbol;
+
 
     //TEXTOS
 
-    public Text vidaActualTexto;
+    public Text vidaActualPersonajeTexto;
     public Text puntosActualesTexto;
     public Text rondaActualTexto;
     public Text miniRondasActualTexto;
-
+    public Text vidaActualArbolTexto;
 
     void Start()
     {
         personajeDatos = personaje.GetComponent<LogicaGuerrero>();
         spawnerDatos = spawnDeEnemigos.GetComponent<SpawnerEnemigoManager>();
+        arbolDatos = arbol.GetComponent<ArbolScript>();
 
     }
 
@@ -38,13 +44,17 @@ public class HUD : MonoBehaviour
 
         puntosActuales = GameManagerSC.Instancia.scoreManager.obtenerPuntos();
         rondaActual = (int)GameManagerSC.Instancia.roundManager.obtenerRonda();
-        vidaActual = (int)personajeDatos.ObtenerVidaActual();
+        vidaActualPersonaje = (int)personajeDatos.ObtenerVidaActual();
         miniRondasActual = spawnerDatos.obtenerMiniRondaActual();
 
-        vidaActualTexto.text = vidaActual.ToString();
+        vidaActualArbol = (int)arbolDatos.ObtenerVidaActual();
+
+        vidaActualPersonajeTexto.text = vidaActualPersonaje.ToString();
         puntosActualesTexto.text = puntosActuales.ToString();
         rondaActualTexto.text = rondaActual.ToString();
         miniRondasActualTexto.text = miniRondasActual.ToString();
+        vidaActualArbolTexto.text = vidaActualArbol.ToString();
+
 
 
     }

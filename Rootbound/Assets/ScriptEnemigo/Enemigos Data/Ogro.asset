@@ -16,6 +16,6 @@ MonoBehaviour:
   vida: 100
   tipoDeEnemigo: 0
   "da\xF1o": 5
-  velocidadMovimiento: 10
+  velocidadMovimiento: 5
   velocidadAtaque: 100
   modelo: {fileID: 3642132013119947544, guid: 84fec29860f53044db2b17ccea1d4339, type: 3}

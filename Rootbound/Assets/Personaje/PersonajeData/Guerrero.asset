@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Guerrero
   m_EditorClassIdentifier: 
   tipoDePersonaje: 0
-  vida: 100
+  vida: 200
   velocidadMovimiento: 3.5
   multiplicadorCorrer: 2
   "da\xF1oDeAtaque": 10

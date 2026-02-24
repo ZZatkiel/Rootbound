@@ -41,4 +41,6 @@ public class ArbolScript : MonoBehaviour
         manejadorDerrota.SetActive(true);
 
     }
+
+    public float ObtenerVidaActual() => vidaActual;
 }

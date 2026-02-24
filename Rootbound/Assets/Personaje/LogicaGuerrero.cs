@@ -177,26 +177,20 @@ public class LogicaGuerrero : MonoBehaviour
     private void IntentarAtacar()
     {
 
-        Debug.Log("PASO POR ACA");
-        //Formula para el cooldown de los ataques
         float ataquesPorSegundo = Mathf.Max(0.0001f, velocidadAtaqueActual);
         float cooldown = 1f / ataquesPorSegundo;
 
-        Debug.Log("PASO POR ACA 2");
 
-        if (Time.time < siguienteAtaqueTiempo) return; // aún en cooldown
-        Debug.Log("PASO POR ACA 2.5");
-        Debug.Log("estaAtacando vale: " + estaAtacando);
-        if (estaAtacando) return; // ya en animación de ataque
+        if (Time.time < siguienteAtaqueTiempo) return; 
+        if (estaAtacando) return; 
 
         Debug.Log("PASO POR ACA 3");
 
         estaAtacando = true;
-        siguienteAtaqueTiempo = Time.time + cooldown; // para no permitir otro input hasta cooldown (se puede ajustar)
+        siguienteAtaqueTiempo = Time.time + cooldown; 
         if (animator != null)
         {
-            Debug.Log("PASO POR ACA 4");
-            animator.SetTrigger("attack"); // asegurate de tener el trigger "Attack" en el Animator
+            animator.SetTrigger("attack"); 
         }
     }
 
